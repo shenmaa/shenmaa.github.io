@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/blog.jpg">
+  <link rel="icon" href="/img/blog.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="owasp top 101:失效的访问控制概述：访问控制是一种策略，用户超出其指定权限范围进行操作  原理：一般通过改URL地址，内部程序状态，HTML页面 ，可视化工具cyber 利用方式：修改API请求方式绕过访问控制 重放或修改 JWT（JSON Web Token）   访问控制令牌  ，或操作cookie进行提权  减少跨域资源共享   使用SSL对数据流进行加密，也可以对cookie进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="owasp top10">
+<meta property="og:url" content="http://example.com/2023/02/22/owasp%20top%2010/index.html">
+<meta property="og:site_name" content="TTblog">
+<meta property="og:description" content="owasp top 101:失效的访问控制概述：访问控制是一种策略，用户超出其指定权限范围进行操作  原理：一般通过改URL地址，内部程序状态，HTML页面 ，可视化工具cyber 利用方式：修改API请求方式绕过访问控制 重放或修改 JWT（JSON Web Token）   访问控制令牌  ，或操作cookie进行提权  减少跨域资源共享   使用SSL对数据流进行加密，也可以对cookie进">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-02-22T08:35:20.000Z">
+<meta property="article:modified_time" content="2023-04-17T14:03:59.199Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>owasp top10 - TTblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>不会做题的菜鸡</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>主页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>文章</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>类别</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="owasp top10"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-22 16:35" pubdate>
+          February 22, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">owasp top10</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="owasp-top-10"><a href="#owasp-top-10" class="headerlink" title="owasp top 10"></a>owasp top 10</h1><h2 id="1-失效的访问控制"><a href="#1-失效的访问控制" class="headerlink" title="1:失效的访问控制"></a>1:失效的访问控制</h2><h6 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h6><p>访问控制是一种策略，用户超出其指定权限范围进行操作 </p>
+<h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h6><p>一般通过改URL地址，内部程序状态，HTML页面 <em>，</em>可视化<em>工具cyber</em></p>
+<h6 id="利用方式："><a href="#利用方式：" class="headerlink" title="利用方式："></a>利用方式：</h6><p>修改API请求方式绕过访问控制</p>
+<p>重放或修改 JWT（JSON Web Token）   访问控制令牌  ，或操作cookie进行提权</p>
+<p> 减少跨域资源共享   使用SSL对数据流进行加密，也可以对cookie进行加密  </p>
+<h6 id="漏洞修复："><a href="#漏洞修复：" class="headerlink" title="漏洞修复："></a>漏洞修复：</h6><p>采用最小权限原则，或默认请求拒绝原则</p>
+<p>优化访问控制体系</p>
+<p>强制所有请求优先经过访问控制检查</p>
+<h2 id="2-加密机制失效"><a href="#2-加密机制失效" class="headerlink" title="2.加密机制失效"></a>2.加密机制失效</h2><p>这里的重点在于经常暴露敏感数据的密码错误或缺少密码错误，如</p>
+<h3 id="会话令牌"><a href="#会话令牌" class="headerlink" title="会话令牌"></a>会话令牌</h3><h3 id="登录-ID-和密码"><a href="#登录-ID-和密码" class="headerlink" title="登录 ID 和密码"></a>登录 ID 和密码</h3><h3 id="网上交易"><a href="#网上交易" class="headerlink" title="网上交易"></a>网上交易</h3><h3 id="个人信息（交换服务网络或SSN、健康记录等）"><a href="#个人信息（交换服务网络或SSN、健康记录等）" class="headerlink" title="个人信息（交换服务网络或SSN、健康记录等）"></a>个人信息（交换服务网络或SSN、健康记录等）</h3><p>应用程序可以使用自动数据库加密来安全地加密信用卡数据。不幸的是，当访问此信息时，它会立即未加密，从而导致 SQL 注入错误以明文形式提取信用卡信息，入侵者可能会利用这些信息  </p>
+<h3 id="修复建议："><a href="#修复建议：" class="headerlink" title="修复建议："></a>修复建议：</h3><ul>
+<li>使用具有延迟因子的稳健、加盐和自适应哈希算法来存储密码，例如 scrypt、Argon2、PBKDF2 或 bcrypt</li>
+<li>传输敏感数据时应避免使用文件传输协议 (FTP)和简单邮件传输协议 (SMTP)等旧协议</li>
+<li>建议实施经过身份验证的加密，而不是仅仅使用加密</li>
+<li>必须生成加密随机密钥并将其存储为字节数组。如果使用密码，则必须使用基于密码的密钥创建算法将其更改为类似于密钥的东西</li>
+</ul>
+<h2 id="3-注入"><a href="#3-注入" class="headerlink" title="3.注入"></a>3.注入</h2><p>注入（或SQL 注入）是针对网站的数据库攻击，该网站使用结构化查询语言 (SQL) 来获取信息或执行通常需要经过身份验证的用户帐户的活动。程序很难从自己的代码中解释这些代码，从而允许攻击者进行注入攻击以访问受保护区域和伪装成受信任用户的敏感数据。<strong>注入包括SQL注入、命令注入、CRLF注入、LDAP注入等。</strong></p>
+<p> 注入漏洞的根本原因，是当攻击者向应用程序发送恶意数据的时候，应用程序并未进行校验，直接传递给到解释器，解释器是不会对攻击者输入的恶意数据进行校验，而是直接翻译成机器可以执行的语句，于是乎攻击者的目的便达成了。常见的产生注入漏洞的原因如下：</p>
+<p>常见的注入类型：</p>
+<h3 id="CRLF注入"><a href="#CRLF注入" class="headerlink" title="CRLF注入"></a><strong>CRLF注入</strong></h3><p>CRLF注入漏洞的本质和XSS有点相似，攻击者将恶意数据发送给易受攻击的Web应用程序，Web应用程序将恶意数据输出在HTTP响应头中。</p>
+<h4 id="OS注入"><a href="#OS注入" class="headerlink" title="OS注入"></a>OS注入</h4><p>在应用程序获取用户输入的地方输入可执行的系统命令来获取服务器权限；</p>
+<h3 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h3><p>在应用程序已定义好的SQL语句后面通过某些特殊的符号增加额外的语句实现攻击；</p>
+<h3 id="NoSQL注入"><a href="#NoSQL注入" class="headerlink" title="NoSQL注入"></a>NoSQL注入</h3><p>输入非SQL语句，如系统操作命令等来实现攻击的目的；</p>
+<h3 id="LDAP注入"><a href="#LDAP注入" class="headerlink" title="LDAP注入"></a>LDAP注入</h3><p>（<strong>轻型目录访问协议</strong>（英文：Lightweight Directory Access Protocol，缩写：LDAP）。LDAP是一种<strong>通讯协议</strong>，LDAP支持TCP&#x2F;IP。可以说LDAP类似于mysql数据库，用来存储目录）</p>
+<p>输入简单的LDAP语句来自动补全过滤器，以达到提权或绕过验证；</p>
+<h3 id="XML解析器"><a href="#XML解析器" class="headerlink" title="XML解析器"></a>XML解析器</h3><p>通过DTD、XPath的方式，通过尝试访问内网文件的方式实现；</p>
+<h3 id="SMTP包头注入"><a href="#SMTP包头注入" class="headerlink" title="SMTP包头注入"></a>SMTP包头注入</h3><p>邮件头注入，通过修改发包，加入CC（抄送人）等方式获取信息</p>
+<h3 id="ORM查询注入"><a href="#ORM查询注入" class="headerlink" title="ORM查询注入"></a>ORM查询注入</h3><p>通过注入拼接过的sql代码进行注</p>
+<h3 id="防御手段："><a href="#防御手段：" class="headerlink" title="防御手段："></a>防御手段：</h3><ul>
+<li>一个更可取的替代方案是使用完全避开解释器、提供参数化 API 或易位到对象关系映射 (ORM) 工具的 API。</li>
+<li>建议使用积极的服务器端验证输入。许多应用程序，包括用于移动应用程序的文本字段和 API，都需要特殊字符。</li>
+<li>在查询中使用 <code>LIMIT</code> 和其他 SQL 约束是避免 SQL 注入情况下大量数据暴露的好方法。</li>
+</ul>
+<h2 id="4-不安全的设计"><a href="#4-不安全的设计" class="headerlink" title="4.不安全的设计"></a>4.不安全的设计</h2><p>这是 2021 年以来的一个全新类别，它涵盖了许多不同的安全问题，例如缺失或不充分的控制设计。为了解决这些问题，润色是一种专注于设计和架构缺陷的评估方法，它需要使用威胁建模、设计安全建议和参考架构等技术手段。需要注意的是，不安全的设计与不安全的实现是不同的概念。即使设计是安全的，实现上的缺陷也可能导致漏洞。而有缺陷的设计则无法通过完美的实现来弥补，因为这些缺陷可能需要特定的安全保护措施来防御特定的威胁。因此，在开发软件系统时，需要重视润色过程，以确保软件系统的安全性和可靠性。</p>
+<h3 id="防御手段：-1"><a href="#防御手段：-1" class="headerlink" title="防御手段："></a>防御手段：</h3><p>1.开发过程中，应该对关键验证、访问控制、应用程序逻辑和基本流程进行威胁建模，以确保系统能够防范各种攻击。</p>
+<p>2.在用户故事中包含安全术语和控制，以确保开发人员和业务人员都能够理解和遵守系统的安全要求。</p>
+<p>3.所有层级的租户隔离设计也被视为一种实用的预防方法，可以有效地减少安全漏洞的风险。</p>
+<p>4.在开发过程中，不断完善和优化系统的安全性和可靠性。</p>
+<h2 id="5-安全配置错误"><a href="#5-安全配置错误" class="headerlink" title="5.安全配置错误"></a>5.安全配置错误</h2><p>一般的安全设置问题，都是由一些常见的设置问题导致的，例如配置错误的访问控制。这些问题会为攻击者提供快速和轻松地访问关键数据和站点区域的机会，从而导致重大安全风险。</p>
+<h3 id="防御手段：-2"><a href="#防御手段：-2" class="headerlink" title="防御手段："></a>防御手段：</h3><p>限制访问权限：在Web应用程序中，只有授权的用户才能访问敏感数据或功能。为了避免出现未经授权的访问，可以使用强大的身份验证和授权机制来确保用户身份的真实性和合法性。例如，使用双因素认证、密码强度检查和会话管理等技术手段</p>
+<h2 id="6-易受攻击和过时的组件"><a href="#6-易受攻击和过时的组件" class="headerlink" title="6.易受攻击和过时的组件"></a>6.易受攻击和过时的组件</h2><p>易受攻击和过时的组件是指应用程序中使用的第三方组件或库存在安全漏洞或已经过时，容易被攻击者利用，从而导致应用程序受到攻击。</p>
+<h3 id="防御手段：-3"><a href="#防御手段：-3" class="headerlink" title="防御手段："></a>防御手段：</h3><p>定期更新组件：需要定期更新Web应用程序中使用的组件，以确保它们是最新的版本，并且包含最新的安全补丁</p>
+<p>使用可靠的源：在选择组件时，需要使用可靠的源，例如官方网站或经过验证的第三方库。</p>
+<p>删除任何过多的要求、功能、元素等</p>
+<h2 id="7-身份识别和身份验证错误"><a href="#7-身份识别和身份验证错误" class="headerlink" title="7.身份识别和身份验证错误"></a>7.身份识别和身份验证错误</h2><p>之前称为无效的身份认证，此类别从第二名下滑，现在包含了与身份识别失效相关的CWE，当攻击者获取用户信息、密码恢复、ID 会话和其他登录凭据时，就会产生安全问题。顾名思义，身份和身份验证失败包括黑客利用此类漏洞利用身份验证不足。</p>
+<p>防御手段：</p>
+<ol>
+<li><p>强化密码策略：应该要求用户创建强密码，并定期要求用户更改密码。同时，应该采用密码哈希和加盐等技术来保护用户密码。</p>
+</li>
+<li><p>实现多因素身份验证：多因素身份验证可以增加用户身份验证的安全性。例如，使用短信验证码、硬件令牌或生物识别技术等。</p>
+</li>
+<li><p>限制登录尝试次数：应该限制用户登录失败的次数，防止攻击者使用暴力破解密码的方式尝试登录。</p>
+</li>
+<li><p>使用HTTPS协议：使用HTTPS协议可以加密用户的登录凭据，防止敏感信息在传输过程中被窃取。</p>
+</li>
+</ol>
+<h2 id="8-软件和数据完整性故障"><a href="#8-软件和数据完整性故障" class="headerlink" title="8.软件和数据完整性故障"></a>8.软件和数据完整性故障</h2><p>攻击者可以利用系统或应用程序的配置错误来进行数据篡改或破坏。重要数据和 CI&#x2F;CD 程序的完整性，而无需对其进行验证。一个例子是当应用程序使用来自内容交付网络 (CDN) 或未经授权的来源的扩展、模块或存储库时。未受保护的持续集成&#x2F;持续交付 ( CI&#x2F;CD ) 流程可能会增加恶意代码、系统受损或未经授权访问的风险</p>
+<h3 id="防御手段：-4"><a href="#防御手段：-4" class="headerlink" title="防御手段："></a>防御手段：</h3><p>使用诸如数字签名之类的措施来确认数据或软件来自预期的来源而没有任何篡改</p>
+<p>软件供应链的安全工具，用于保证组件不包含设计缺陷</p>
+<h2 id="9-安全日志记录和监控失败"><a href="#9-安全日志记录和监控失败" class="headerlink" title="9.安全日志记录和监控失败"></a>9.安全日志记录和监控失败</h2><p>安全日志记录和监控是指在应用程序或系统中记录和监控安全事件和活动，以便及时检测和响应安全漏洞和攻击。安全日志记录和监控失败是指在记录和监控安全事件和活动时出现的问题和故障，导致未能及时检测和响应安全漏洞和攻击。</p>
+<h3 id="防御手段：-5"><a href="#防御手段：-5" class="headerlink" title="防御手段："></a>防御手段：</h3><p>1.定期检查日志记录和监控系统：应该定期检查日志记录和监控系统的运行状态，确保其正常运行，并及时处理任何故障和问题</p>
+<p>2.定期检查日志记录和监控系统：应该定期检查日志记录和监控系统的运行状态，确保其正常运行，并及时处理任何故障和问题</p>
+<p>3.确保对日志数据进行适当编码，以避免对监控系统的入侵或网络威胁</p>
+<h2 id="10-服务器端请求伪造（SSRF）"><a href="#10-服务器端请求伪造（SSRF）" class="headerlink" title="10.服务器端请求伪造（SSRF）"></a>10.服务器端请求伪造（SSRF）</h2><p>如果Web应用程序在获取远程资源时没有对用户提供的URL进行验证，就会存在SSRF漏洞。此漏洞会使攻击者能够强制应用程序向意外的目的地发送精心构造的请求，即使在有防火墙、VPN或其他网络访问控制列表保护的情况下也可能发生。</p>
+<h3 id="防御手段：-6"><a href="#防御手段：-6" class="headerlink" title="防御手段："></a>防御手段：</h3><p>1.将远程资源访问功能分离到不同的网络中</p>
+<p>2.使用反向代理：使用反向代理可以在应用程序和外部网络之间添加额外的安全层。反向代理可以拦截所有请求并过滤掉不安全的请求</p>
+<p>3.使用白名单，只有在白名单中的资源和API才能被服务器访问</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/top10/" class="category-chain-item">top10</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>owasp top10</div>
+      <div>http://example.com/2023/02/22/owasp top 10/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 22, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/26/CVE-2022-32991/" title="CVE-2022-32991">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CVE-2022-32991</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/10/%E5%88%B0%E5%BA%95%E7%BB%99%E4%B8%8D%E7%BB%99flag%E5%91%A2/" title="到底给不给flag呢">
+                        <span class="hidden-mobile">到底给不给flag呢</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>推荐</span></a> <i class="iconfont icon-love"></i> <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>博客</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

