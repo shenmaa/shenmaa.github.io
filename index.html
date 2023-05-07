@@ -788,15 +788,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/05/01/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB2/" target="_self">
-          文件包含2
+        <a href="/2022/05/07/DC-2%E9%9D%B6%E5%9C%BA%E6%90%AD%E6%B8%97%E9%80%8F/" target="_self">
+          DC-2靶场搭渗透
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/05/01/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB2/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/05/07/DC-2%E9%9D%B6%E5%9C%BA%E6%90%AD%E6%B8%97%E9%80%8F/" target="_self">
         <div>
-          文件包含2​													 进入题目  查看网页源代码  发现有upload.php，访问发现文件上传，上传一句话木马。 1&lt;script language=php&gt;eval($_POST[shell])&lt;/script&gt;   蚁剑连接一句话木马。  找到flag，提交
+          DC-2靶场搭渗透信息收集首先用goby扫描，发现开放了80端口，  访问，收集到是用了wordpress4.7.10，并且发现flag1，提示到了cewl,（cewl工具生成字典），猜测应该是弱口令登录，一般wordpress后台登录界面为wp-login.php，顺手一试，发现果然存在登陆界面。   进行爆破生成字典前面提示我们使用cewl进行生成字典， sudo touch &#x2F;ho
         </div>
       </a>
 
@@ -804,8 +804,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2022-05-01 15:22" pubdate>
-              2022-05-01
+            <time datetime="2022-05-07 11:22" pubdate>
+              2022-05-07
             </time>
           </div>
         
@@ -820,7 +820,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  <a href="/categories/vulnhub/" class="category-chain-item">vulnhub</a>
   
   
 
@@ -835,7 +835,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/web/">#web</a>
+              <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">#渗透测试</a>
             
           </div>
         
