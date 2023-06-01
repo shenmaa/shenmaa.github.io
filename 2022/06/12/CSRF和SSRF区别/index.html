@@ -16,24 +16,27 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="到底给不给flag呢题目： 12345678910111213141516171819202122232425262728&lt;?phphighlight_file(&amp;#x27;1.txt&amp;#x27;);echo &quot;&lt;br&gt;&lt;br&gt;&quot;;$flag &#x3D; &amp;#x27;flag&amp;#123;f73da0c8e7c774d488a6df0fec2890d9&amp;#1">
+    <meta name="description" content="CSRF和SSRF区别CSRF跨站脚本攻击，CSRF攻击是指攻击者在用户不知情的情况下，通过伪造请求来执行某些操作，例如更改密码、转移资金等。攻击者通常会通过欺骗用户来触发CSRF攻击，例如在恶意网站上放置伪造请求的代码，或在电子邮件中包含伪造请求的链接。 目标：针对用户 利用条件： 目标网站存在CSRF漏洞：即目标网站没有采取有效的防范措施，允许攻击者提交伪造的请求。 受害者已经登录目标网站：因">
 <meta property="og:type" content="article">
-<meta property="og:title" content="到底给不给flag呢">
-<meta property="og:url" content="http://example.com/2023/02/10/%E5%88%B0%E5%BA%95%E7%BB%99%E4%B8%8D%E7%BB%99flag%E5%91%A2/index.html">
+<meta property="og:title" content="CSRF和SSRF区别">
+<meta property="og:url" content="http://example.com/2022/06/12/CSRF%E5%92%8CSSRF%E5%8C%BA%E5%88%AB/index.html">
 <meta property="og:site_name" content="TTblog">
-<meta property="og:description" content="到底给不给flag呢题目： 12345678910111213141516171819202122232425262728&lt;?phphighlight_file(&amp;#x27;1.txt&amp;#x27;);echo &quot;&lt;br&gt;&lt;br&gt;&quot;;$flag &#x3D; &amp;#x27;flag&amp;#123;f73da0c8e7c774d488a6df0fec2890d9&amp;#1">
+<meta property="og:description" content="CSRF和SSRF区别CSRF跨站脚本攻击，CSRF攻击是指攻击者在用户不知情的情况下，通过伪造请求来执行某些操作，例如更改密码、转移资金等。攻击者通常会通过欺骗用户来触发CSRF攻击，例如在恶意网站上放置伪造请求的代码，或在电子邮件中包含伪造请求的链接。 目标：针对用户 利用条件： 目标网站存在CSRF漏洞：即目标网站没有采取有效的防范措施，允许攻击者提交伪造的请求。 受害者已经登录目标网站：因">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111413974.png">
-<meta property="article:published_time" content="2023-02-10T08:35:20.000Z">
-<meta property="article:modified_time" content="2023-04-11T06:25:16.804Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012117378.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012118624.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012120908.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012232745.png">
+<meta property="article:published_time" content="2022-06-12T13:22:34.000Z">
+<meta property="article:modified_time" content="2023-06-01T14:50:48.211Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="web">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111413974.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012117378.png">
   
   
   
-  <title>到底给不给flag呢 - TTblog</title>
+  <title>CSRF和SSRF区别 - TTblog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +217,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="到底给不给flag呢"></span>
+            <span id="subtitle" data-typed-text="CSRF和SSRF区别"></span>
           
         </div>
 
@@ -225,8 +228,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-10 16:35" pubdate>
-          February 10, 2023 pm
+        <time datetime="2022-06-12 21:22" pubdate>
+          June 12, 2022 pm
         </time>
       </span>
     
@@ -237,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k words
+          1.9k words
         
       </span>
     
@@ -248,7 +251,7 @@
         
         
         
-          9 mins
+          17 mins
         
       </span>
     
@@ -286,29 +289,54 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">到底给不给flag呢</h1>
+            <h1 style="display: none">CSRF和SSRF区别</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="到底给不给flag呢"><a href="#到底给不给flag呢" class="headerlink" title="到底给不给flag呢"></a>到底给不给flag呢</h1><p>题目：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-string">&#x27;1.txt&#x27;</span>);<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&lt;br&gt;&quot;</span>;<br><br><span class="hljs-variable">$flag</span> = <span class="hljs-string">&#x27;flag&#123;f73da0c8e7c774d488a6df0fec2890d9&#125;&#x27;</span>;<br><span class="hljs-variable">$qwq</span>= <span class="hljs-string">&#x27;我想要flag&#x27;</span>;<br><span class="hljs-variable">$QAQ</span> = <span class="hljs-string">&#x27;我又不想要flag了，滚吧&#x27;</span>;<br><span class="hljs-keyword">if</span>(!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>]) &amp;&amp; !<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;flag&#x27;</span>]))&#123;<br>    <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$qwq</span>); <span class="hljs-comment">#</span><br>&#125;<br><br><span class="hljs-keyword">if</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-string">&#x27;flag&#x27;</span> || <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-string">&#x27;flag&#x27;</span>)&#123; <br>    <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$QAQ</span>);<br>&#125;<br><br><span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$_POST</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$key</span> =&gt; <span class="hljs-variable">$value</span>) &#123;<span class="hljs-comment">#foreach遍历</span><br>    <span class="hljs-variable">$$key</span> = <span class="hljs-variable">$value</span>;<br>&#125;<br><br><span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$_GET</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$key</span> =&gt; <span class="hljs-variable">$value</span>) &#123;<br>    <span class="hljs-variable">$$key</span> = <span class="hljs-variable">$$value</span>;<br>&#125;<br><br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$flag</span>;<br><br><br><br>我想要flag<br></code></pre></td></tr></table></figure>
+                <h1 id="CSRF和SSRF区别"><a href="#CSRF和SSRF区别" class="headerlink" title="CSRF和SSRF区别"></a>CSRF和SSRF区别</h1><h2 id="CSRF跨站脚本攻击，"><a href="#CSRF跨站脚本攻击，" class="headerlink" title="CSRF跨站脚本攻击，"></a>CSRF跨站脚本攻击，</h2><p>CSRF攻击是指攻击者在用户不知情的情况下，通过伪造请求来执行某些操作，例如更改密码、转移资金等。攻击者通常会通过欺骗用户来触发CSRF攻击，例如在恶意网站上放置伪造请求的代码，或在电子邮件中包含伪造请求的链接。</p>
+<p><strong>目标：针对用户</strong></p>
+<h3 id="利用条件："><a href="#利用条件：" class="headerlink" title="利用条件："></a>利用条件：</h3><ol>
+<li>目标网站存在CSRF漏洞：即目标网站没有采取有效的防范措施，允许攻击者提交伪造的请求。</li>
+<li>受害者已经登录目标网站：因为CSRF攻击是利用受害者的身份进行的，所以攻击者需要知道受害者已经登录了目标网站。</li>
+<li>攻击者可以诱使受害者访问恶意网站或点击恶意链接：攻击者需要将伪造的请求代码嵌入到恶意网站或链接中，然后诱使受害者访问该网站或点击该链接。</li>
+</ol>
+<h2 id="SSRF服务器请求伪造"><a href="#SSRF服务器请求伪造" class="headerlink" title="SSRF服务器请求伪造"></a>SSRF服务器请求伪造</h2><p>SSRF攻击是指攻击者利用目标应用程序的漏洞，将服务器端发起的请求重定向到攻击者指定的服务器上。攻击者可以利用SSRF漏洞来执行各种攻击，例如获取敏感数据、攻击内部系统等。</p>
+<p>目标：针对服务器</p>
+<h3 id="利用条件：-1"><a href="#利用条件：-1" class="headerlink" title="利用条件："></a>利用条件：</h3><ol>
+<li><p>目标应用程序必须允许用户控制请求的URL或参数，且没有对用户输入进行充分的验证和过滤。</p>
+</li>
+<li><p>应用程序必须在处理用户提供的URL或参数时，使用了不安全的方式，例如直接将用户输入作为URL参数传递给后端服务器，或者使用了不安全的URL重定向机制。</p>
+</li>
+<li><p>后端服务器必须对来自应用程序的请求进行了信任，没有对请求进行充分的验证和授权，或者存在其他安全漏洞，例如解析了恶意的URL或参数，执行了恶意的代码等。</p>
+</li>
+<li><p>file_get_contents()，fsockopen()，curl_exec()，函数配置不当常常会造成漏洞。</p>
+</li>
+</ol>
+<h2 id="CSRF的利用"><a href="#CSRF的利用" class="headerlink" title="CSRF的利用"></a>CSRF的利用</h2><p>以pikachu靶场为例，burpsuite抓包，账号为kobe，</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012117378.png" srcset="/img/loading.gif" lazyload alt="image-20230601211757303"></p>
+<p>我们现在登录lili的账号</p>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012118624.png" srcset="/img/loading.gif" lazyload alt="image-20230601211828552"></p>
+<p>然而这时候我们可以利用在线工具将我们的地址转为短链接，发给目标</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">9096</span><span class="hljs-regexp">/pikachu-master/</span>pikachu-master<span class="hljs-regexp">/vul/</span>csrf<span class="hljs-regexp">/csrfget/</span>csrf_get_edit.php?sex=boy&amp;phonenum=<span class="hljs-number">1234567890</span>&amp;add=<span class="hljs-number">12345678</span>&amp;email=<span class="hljs-number">123456789</span>&amp;submit=submit<br></code></pre></td></tr></table></figure>
 
-<p>发现有个flag，目测不可能是，去提交，回显错误。</p>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">if</span>(!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>]) &amp;&amp; !<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;flag&#x27;</span>]))&#123;  <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$qwq</span>);&#125;<br></code></pre></td></tr></table></figure>
+<p>当目标点击连接后信息就会被修改<img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012120908.png" srcset="/img/loading.gif" lazyload alt="image-20230601212038866"></p>
+<h2 id="SSRF利用"><a href="#SSRF利用" class="headerlink" title="SSRF利用"></a>SSRF利用</h2><p>SSRF还以pikachu为例,url上纯在读取路径我们尝试读取系统文件。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">url=file:<span class="hljs-regexp">//</span><span class="hljs-regexp">/C:/</span>Windows/win.ini<br></code></pre></td></tr></table></figure>
 
-<p>如果get都没有传flag，就会退出输出$qwq 我想要flag</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">if</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-string">&#x27;flag&#x27;</span> || <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-string">&#x27;flag&#x27;</span>)&#123; <br>    <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$QAQ</span>);<br></code></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202306012232745.png" srcset="/img/loading.gif" lazyload alt="image-20230601223209671"></p>
+<p><strong>CRLF 编码绕过</strong></p>
+<p>%0d-&gt;0x0d-&gt;\r回车</p>
+<p>%0a-&gt;0x0a-&gt;\n换行</p>
+<p>防御</p>
+<p>进行HTTP头部注入</p>
+<p>限制请求的端口只能为Web端口，只允许访问HTTP和HTTPS的请求。</p>
+<p>限制不能访问内网的IP，以防止对内网进行攻击</p>
+<p>屏蔽返回的详细信息</p>
+<h2 id="XSS和CSRF的组合利用"><a href="#XSS和CSRF的组合利用" class="headerlink" title="XSS和CSRF的组合利用"></a>XSS和CSRF的组合利用</h2><h3 id="使用CSRF盗取SELF-XSS的Cookie"><a href="#使用CSRF盗取SELF-XSS的Cookie" class="headerlink" title="使用CSRF盗取SELF-XSS的Cookie"></a>使用CSRF盗取SELF-XSS的Cookie</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-number">1</span>.在恶意网站<span class="hljs-selector-tag">B</span>中写入CSRF payload，使用这个CSRF来修改用户在<span class="hljs-selector-tag">A</span>网站的昵称为XSS payload<br><br><span class="hljs-number">2</span>.诱惑用户访问恶意网站<span class="hljs-selector-tag">B</span>，CSRF payload触发，用户在<span class="hljs-selector-tag">A</span>网站的昵称被修改为XSS payload<br><br><span class="hljs-number">3</span>.用户重新访问<span class="hljs-selector-tag">A</span>网站时，由于右上角显示了昵称，所以会触发对应的XSS payload，就会获取到cookie<br></code></pre></td></tr></table></figure>
 
-<p>如果post或者get传了flag&#x3D;flag，就会退出并输出$QAQ我又不想要flag了，滚吧</p>
-<p>接着往下看，foreach和$$组合，妥妥的变量覆盖漏洞。</p>
-<p>非常简单我们将flag的值覆盖掉即可；</p>
-<p>payload：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">qwq</span>=flag&amp;flag=qwq<br></code></pre></td></tr></table></figure>
+<h3 id="使用XSS窃取防御CSRF的Token"><a href="#使用XSS窃取防御CSRF的Token" class="headerlink" title="使用XSS窃取防御CSRF的Token"></a>使用XSS窃取防御CSRF的Token</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-number">1.</span>在A网站的URL中构造XSS payload，实现以下功能：<br><br>    a.获取本页面的Token值<br><br>    b.将Token值赋值给<span class="hljs-keyword">window</span>.name<br><br><span class="hljs-number">2.</span>在B网站中插入实现以下功能的JS：<br><br>    a.创建一个iframe，并将iframe.src设为上面构造好的带有XSS payload的A网站的URL<br><br>    b.写一个<span class="hljs-keyword">function</span>，首先将iframe.contentWindow.<span class="hljs-keyword">location</span>设为任意一个与B网站同源的页面，然后使<span class="hljs-keyword">window</span>.name = iframe.contentWindow.name<br><br>        修改iframe.contentWindow.<span class="hljs-keyword">location</span>的原因是：当iframe中的页面为A网站的页面时，与B网站为不同源的，不能将iframe的<span class="hljs-keyword">window</span>.name赋值给当前B网站窗口的<span class="hljs-keyword">window</span>.name。但是我们把iframe中的页面换为与B网站同源的页面时，是可以进行<span class="hljs-keyword">window</span>.name的赋值的。由于<span class="hljs-keyword">window</span>.name的特性，其值本身与网站无关，是窗口的一个值。因此修改页面后<span class="hljs-keyword">window</span>.name并未改变，我们就可以顺利取出了。<br><br>    c.将这个iframe销毁 <br><br><span class="hljs-number">3.</span>在B网站中插入真正的CSRF payload，带上已成功获取的<span class="hljs-keyword">window</span>.name中的Token值，进行攻击。<br></code></pre></td></tr></table></figure>
 
-<p>$qwq&#x3D;$flag&amp;$flag&#x3D;$qwq</p>
-<p><img src="https://raw.githubusercontent.com/shenmaa/tupian/main/img/202304111413974.png" srcset="/img/loading.gif" lazyload alt="image-20230411141342734"></p>
-<p>拿下flag</p>
 
                 
               </div>
@@ -327,7 +355,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  <a href="/categories/top10/" class="category-chain-item">top10</a>
   
   
 
@@ -354,8 +382,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>到底给不给flag呢</div>
-      <div>http://example.com/2023/02/10/到底给不给flag呢/</div>
+      <div>CSRF和SSRF区别</div>
+      <div>http://example.com/2022/06/12/CSRF和SSRF区别/</div>
     </div>
     <div class="license-meta">
       
@@ -367,7 +395,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>February 10, 2023</div>
+          <div>June 12, 2022</div>
         </div>
       
       
@@ -399,9 +427,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/22/owasp%20top%2010/" title="owasp top10">
+                      <a href="/2023/02/10/%E5%88%B0%E5%BA%95%E7%BB%99%E4%B8%8D%E7%BB%99flag%E5%91%A2/" title="到底给不给flag呢">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">owasp top10</span>
+                        <span class="hidden-mobile">到底给不给flag呢</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -409,8 +437,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/06/12/CSRF%E5%92%8CSSRF%E5%8C%BA%E5%88%AB/" title="CSRF和SSRF区别">
-                        <span class="hidden-mobile">CSRF和SSRF区别</span>
+                      <a href="/2022/06/06/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90/" title="流量分析">
+                        <span class="hidden-mobile">流量分析</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
